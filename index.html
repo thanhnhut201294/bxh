@@ -11,7 +11,6 @@
     <style>
         :root {
             --bg-dark: #0f172a;
-            --bg-card: #1e293b;
             --text-main: #f1f5f9;
             --neon-green: #39ff14;
             --neon-red: #ff073a;
@@ -24,12 +23,17 @@
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
-            font-family: 'Roboto', sans-serif; /* Fallback for body text */
-            padding-bottom: 50px;
+            font-family: 'Roboto', sans-serif;
         }
 
-        /* Áp dụng font Pixel cho tiêu đề và số liệu quan trọng */
-        h1, h2, h3, h4, h5, .pixel-font, .rank-number, .modal-title, .nav-link, .btn-pixel {
+        /* FIX MÀU CHỮ TOÀN BỘ */
+        h1, h2, h3, h4, h5, .modal-title, .form-select, .form-label, .btn {
+            color: white !important;
+        }
+        .text-muted { color: #94a3b8 !important; }
+        
+        /* Font Pixel */
+        .pixel-font, .rank-number, .modal-title, .btn-versus, table th {
             font-family: 'VT323', monospace;
             text-transform: uppercase;
         }
@@ -39,132 +43,102 @@
             border: 1px solid #334155;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
         }
 
-        /* --- HEADER & TICKER --- */
+        /* HEADER & TICKER */
         .ticker-wrap {
             background: #000;
             border-bottom: 2px solid var(--neon-blue);
-            white-space: nowrap;
-            overflow: hidden;
-            padding: 8px 0;
-            position: sticky; top: 0; z-index: 100;
+            white-space: nowrap; overflow: hidden;
+            padding: 8px 0; position: sticky; top: 0; z-index: 100;
         }
         .ticker {
-            display: inline-block;
-            animation: marquee 30s linear infinite;
-            color: var(--neon-green);
-            font-family: 'VT323', monospace;
-            font-size: 1.4rem;
+            display: inline-block; animation: marquee 30s linear infinite;
+            color: var(--neon-green); font-family: 'VT323'; font-size: 1.4rem;
         }
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
         .btn-versus {
             background: linear-gradient(45deg, #ff073a, #bc13fe);
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            padding: 5px 20px;
+            border: none; color: white; font-size: 1.2rem; padding: 5px 20px;
             box-shadow: 0 0 10px rgba(255, 7, 58, 0.5);
         }
-        .btn-versus:hover { transform: scale(1.05); color: white; box-shadow: 0 0 20px rgba(255, 7, 58, 0.8); }
 
-        /* --- TABLE (DESKTOP) --- */
-        .table-custom {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 8px;
-        }
-        .table-custom th {
-            font-family: 'VT323', monospace;
-            font-size: 1.5rem;
-            color: #94a3b8;
-            padding: 10px;
-            border-bottom: 1px solid #334155;
-            text-align: center;
-        }
+        /* TABLE */
+        .table-custom { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        .table-custom th { color: #94a3b8; padding: 10px; border-bottom: 1px solid #334155; text-align: center; font-size: 1.3rem; }
         .table-custom td {
-            background: #1e293b;
-            padding: 15px;
-            vertical-align: middle;
-            border-top: 1px solid #334155;
-            border-bottom: 1px solid #334155;
-            color: white;
+            background: #1e293b; padding: 10px; vertical-align: middle;
+            border-top: 1px solid #334155; border-bottom: 1px solid #334155; color: white;
         }
-        .table-custom tr td:first-child { border-left: 1px solid #334155; border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
-        .table-custom tr td:last-child { border-right: 1px solid #334155; border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+        .table-custom tr td:first-child { border-left: 1px solid #334155; border-radius: 8px 0 0 8px; }
+        .table-custom tr td:last-child { border-right: 1px solid #334155; border-radius: 0 8px 8px 0; }
 
-        /* Mobile Card View */
+        /* BAR CHART MINI (PHONG ĐỘ) */
+        .bar-chart-mini {
+            display: flex; align-items: center; justify-content: center;
+            height: 40px; gap: 4px;
+        }
+        .bar-column {
+            width: 6px; border-radius: 1px;
+            position: relative;
+        }
+        /* Cột dương mọc lên, cột âm mọc xuống */
+        .bar-pos { background-color: var(--neon-green); }
+        .bar-neg { background-color: var(--neon-red); }
+
+        /* MOBILE CARD VIEW */
         @media (max-width: 768px) {
             .table-custom thead { display: none; }
-            .table-custom, .table-custom tbody, .table-custom tr, .table-custom td { display: block; width: 100%; }
-            .table-custom tr { margin-bottom: 15px; background: transparent; }
-            .table-custom td {
-                display: flex; justify-content: space-between; align-items: center;
-                text-align: right; padding: 10px 15px;
-                background: #1e293b;
-                border: none; border-bottom: 1px solid #334155;
-            }
-            .table-custom td:first-child { border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-left-radius: 0; background: #0f172a; justify-content: center; }
-            .table-custom td:last-child { border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; border-top-right-radius: 0; }
-            .table-custom td::before {
-                content: attr(data-label);
-                font-family: 'VT323'; color: #94a3b8; font-size: 1.2rem; text-transform: uppercase;
-            }
+            .table-custom tr { display: block; margin-bottom: 15px; }
+            .table-custom td { display: flex; justify-content: space-between; text-align: right; padding: 10px 15px; }
+            .table-custom td:first-child { justify-content: center; background: #0f172a; }
+            .table-custom td::before { content: attr(data-label); color: #94a3b8; font-family: 'VT323'; margin-right: 10px; }
         }
 
-        /* --- TIERS --- */
+        /* TIERS */
         .row-god td { background: rgba(255, 215, 0, 0.05) !important; border-color: var(--neon-gold) !important; }
-        .row-god .rank-number { font-size: 2.5rem; color: var(--neon-gold); text-shadow: 0 0 10px var(--neon-gold); }
-        
+        .row-god .rank-number { font-size: 2rem; color: var(--neon-gold); text-shadow: 0 0 10px var(--neon-gold); }
         .row-feeder td { background: rgba(255, 7, 58, 0.05) !important; border-color: var(--neon-red) !important; }
-        .row-feeder .rank-number { font-size: 2rem; color: var(--neon-red); }
+        .row-feeder .rank-number { font-size: 1.8rem; color: var(--neon-red); }
 
-        /* --- BADGES & ARCHETYPES --- */
-        .badge-archetype {
-            font-family: 'VT323'; font-size: 1.2rem; padding: 4px 8px; border-radius: 4px;
-            display: inline-block; margin-top: 5px;
-        }
+        /* BADGES */
+        .badge-archetype { font-family: 'VT323'; font-size: 1.2rem; padding: 4px 8px; border-radius: 4px; display: inline-block; margin-top: 5px; }
         .arch-shark { background: rgba(255, 7, 58, 0.2); color: var(--neon-red); border: 1px solid var(--neon-red); }
         .arch-turtle { background: rgba(57, 255, 20, 0.2); color: var(--neon-green); border: 1px solid var(--neon-green); }
         .arch-gambler { background: rgba(188, 19, 254, 0.2); color: var(--neon-purple); border: 1px solid var(--neon-purple); }
         .arch-atm { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid #cbd5e1; }
 
-        /* --- MODAL ELEMENTS --- */
+        /* MODAL */
+        .modal-content { background: #1e293b; color: white; border: 1px solid #334155; }
         .volatility-meter {
-            height: 20px; width: 100%;
+            height: 20px; width: 100%; border: 1px solid #fff; border-radius: 10px; position: relative; margin-top: 10px;
             background: linear-gradient(90deg, #3b82f6 0%, #3b82f6 40%, #e2e8f0 50%, #ff073a 60%, #ff073a 100%);
-            border-radius: 10px; position: relative; margin-top: 10px; border: 1px solid #fff;
         }
-        .meter-cursor {
-            width: 4px; height: 26px; background: #fff; position: absolute; top: -3px;
-            box-shadow: 0 0 5px #fff; transition: left 0.5s ease;
-        }
+        .meter-cursor { width: 4px; height: 26px; background: #fff; position: absolute; top: -3px; box-shadow: 0 0 5px #fff; transition: left 0.5s; }
 
-        .heatmap-grid {
-            display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-top: 10px;
-        }
+        .heatmap-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-top: 10px; }
         .heatmap-cell {
             aspect-ratio: 1; border-radius: 3px; background: var(--gray-dim); position: relative;
+            font-size: 10px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3);
         }
         .heatmap-cell:hover::after {
             content: attr(data-title); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
-            background: #000; padding: 4px; font-size: 12px; white-space: nowrap; z-index: 10; border-radius: 4px;
+            background: #000; padding: 4px; font-size: 12px; white-space: nowrap; z-index: 10; border-radius: 4px; border: 1px solid white;
         }
 
-        /* --- LOADING --- */
-        #loading {
-            position: fixed; top:0; left:0; right:0; bottom:0; background: var(--bg-dark); z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
+        /* Fix Select Color */
+        .form-select { background-color: #334155; border-color: #475569; color: white; }
+        .form-select:focus { background-color: #334155; color: white; }
+
+        #loading { position: fixed; top:0; left:0; right:0; bottom:0; background: var(--bg-dark); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
 
     <div id="loading">
-        <h1 class="pixel-font" style="font-size: 4rem; color: var(--neon-green); text-shadow: 0 0 20px var(--neon-green);">TÁI TẠO NĂNG LƯỢNG...</h1>
-        <div class="spinner-border text-info" style="width: 3rem; height: 3rem;" role="status"></div>
+        <h1 class="pixel-font" style="font-size: 3rem; color: var(--neon-green);">LOADING DATA...</h1>
+        <div class="spinner-border text-light" style="width: 3rem; height: 3rem;" role="status"></div>
     </div>
 
     <div class="ticker-wrap">
@@ -174,7 +148,7 @@
     <div class="container py-4">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
             <div class="text-center text-md-start mb-3 mb-md-0">
-                <h1 class="pixel-font display-3 mb-0" style="text-shadow: 3px 3px 0 var(--neon-blue); font-weight: bold;">
+                <h1 class="pixel-font display-4 mb-0" style="text-shadow: 3px 3px 0 var(--neon-blue); font-weight: bold;">
                     <i class="fas fa-bolt text-warning"></i> TÁI TẠO NĂNG LƯỢNG
                 </h1>
                 <p class="text-muted pixel-font fs-4 mb-0">Hệ thống báo cáo Sát Phạt Hội</p>
@@ -188,16 +162,15 @@
             <table class="table-custom text-nowrap">
                 <thead>
                     <tr>
-                        <th style="width: 80px;">#</th>
-                        <th class="text-start">Thành viên (Player)</th>
-                        <th style="width: 100px;">Trận</th>
-                        <th style="width: 100px;">Win Rate</th>
-                        <th style="width: 120px;">Phong độ</th>
-                        <th class="text-end" style="width: 120px;">Tổng EXP</th>
+                        <th style="width: 60px;">#</th>
+                        <th class="text-start">Thành viên</th>
+                        <th style="width: 80px;">Trận</th>
+                        <th style="width: 80px;">Win%</th>
+                        <th style="width: 140px;">Phong độ (5 trận)</th>
+                        <th class="text-end" style="width: 100px;">EXP</th>
                     </tr>
                 </thead>
-                <tbody id="leaderboardBody">
-                    </tbody>
+                <tbody id="leaderboardBody"></tbody>
             </table>
         </div>
         
@@ -208,9 +181,9 @@
 
     <div class="modal fade" id="playerModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content glass-card" style="background: #1e293b; color: white;">
+            <div class="modal-content glass-card">
                 <div class="modal-header border-bottom border-secondary">
-                    <h2 class="modal-title fs-2" id="modalName" style="color: var(--neon-green);">NAME</h2>
+                    <h2 class="modal-title fs-2" id="modalName" style="color: var(--neon-green) !important;">NAME</h2>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -218,24 +191,16 @@
                         <div class="col-lg-5 text-center border-end border-secondary">
                             <div class="mb-3">
                                 <div id="modalArchetypeBadge"></div>
-                                <div class="fst-italic text-muted mt-2" id="modalQuote" style="font-size: 0.9rem;">"Quote"</div>
+                                <div class="fst-italic text-muted mt-2" id="modalQuote">"Quote"</div>
                             </div>
                             
                             <div style="position: relative; height: 250px; width: 100%;">
                                 <canvas id="radarChart"></canvas>
                             </div>
                             
-                            <div class="mt-2 text-start px-3" style="font-size: 0.8rem; color: #94a3b8;">
-                                <div><i class="fas fa-fist-raised"></i> <b>Sát thương:</b> Điểm Max kiếm được</div>
-                                <div><i class="fas fa-shield-alt"></i> <b>Độ lì:</b> Số lượng trận đấu</div>
-                                <div><i class="fas fa-dice"></i> <b>May mắn:</b> Tỷ lệ thắng (Winrate)</div>
-                                <div><i class="fas fa-balance-scale"></i> <b>Ổn định:</b> Ít bị âm sâu</div>
-                                <div><i class="fas fa-chart-line"></i> <b>Phong độ:</b> 5 trận gần nhất</div>
-                            </div>
-
                             <div class="mt-4 px-2">
-                                <div class="d-flex justify-content-between pixel-font" style="font-size: 1.2rem;">
-                                    <span class="text-primary"><i class="fas fa-shield-alt"></i> AN TOÀN</span>
+                                <div class="d-flex justify-content-between pixel-font" style="font-size: 1.1rem;">
+                                    <span class="text-info"><i class="fas fa-shield-alt"></i> AN TOÀN</span>
                                     <span class="text-danger">KHÔ MÁU <i class="fas fa-skull"></i></span>
                                 </div>
                                 <div class="volatility-meter">
@@ -252,34 +217,32 @@
                             <div class="row g-2 mb-4">
                                 <div class="col-6">
                                     <div class="p-2 border border-secondary rounded bg-dark h-100">
-                                        <div class="small text-muted">Sổ nợ (Chủ nợ chính)</div>
-                                        <div class="text-danger fw-bold" id="modalLedgerLoss">---</div>
-                                        <small class="text-secondary" style="font-size: 0.7rem;">(Người bào tiền bạn nhiều nhất)</small>
+                                        <div class="small text-muted">Chủ nợ (Thua nhiều nhất)</div>
+                                        <div class="text-danger fw-bold fs-5" id="modalLedgerLoss">---</div>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="p-2 border border-secondary rounded bg-dark h-100">
-                                        <div class="small text-muted">Nguồn thu nhập</div>
-                                        <div class="text-success fw-bold" id="modalLedgerWin">---</div>
-                                        <small class="text-secondary" style="font-size: 0.7rem;">(Bạn bào tiền ai nhiều nhất)</small>
+                                        <div class="small text-muted">Con mồi (Thắng nhiều nhất)</div>
+                                        <div class="text-success fw-bold fs-5" id="modalLedgerWin">---</div>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="p-2 border border-secondary rounded bg-dark h-100">
-                                        <div class="small text-muted">Hợp cạ (Winrate tăng)</div>
+                                        <div class="small text-muted">Hợp cạ</div>
                                         <div class="text-info fw-bold" id="modalSynergy">---</div>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="p-2 border border-secondary rounded bg-dark h-100">
-                                        <div class="small text-muted">Khắc tinh (Winrate giảm)</div>
+                                        <div class="small text-muted">Khắc tinh</div>
                                         <div class="text-warning fw-bold" id="modalNemesis">---</div>
                                     </div>
                                 </div>
                             </div>
 
                             <h5 class="pixel-font text-info border-bottom border-secondary pb-1 mb-2">
-                                <i class="fas fa-calendar-alt"></i> Lịch Sử Chấm Công (60 Ngày)
+                                <i class="fas fa-calendar-alt"></i> Lịch Sử (60 Ngày Gần Nhất)
                             </h5>
                             <div id="modalHeatmap" class="heatmap-grid"></div>
                             <div class="d-flex justify-content-between mt-1 small text-muted">
@@ -294,23 +257,23 @@
         </div>
     </div>
 
-    <div class="modal fade" id="versusModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="versusModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content glass-card" style="background: #0f172a; border: 1px solid var(--neon-purple);">
+            <div class="modal-content glass-card" style="border: 1px solid var(--neon-purple);">
                 <div class="modal-header border-bottom border-secondary">
-                    <h3 class="modal-title text-center w-100 pixel-font" style="color: var(--neon-purple);">ĐẤU TRƯỜNG 1VS1</h3>
+                    <h3 class="modal-title text-center w-100 pixel-font" style="color: var(--neon-purple) !important;">ĐẤU TRƯỜNG 1VS1</h3>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body text-center">
                     <div class="row align-items-center mb-4">
                         <div class="col-5">
-                            <select id="versusP1" class="form-select bg-dark text-white border-secondary pixel-font fs-5"></select>
+                            <select id="versusP1" class="form-select pixel-font fs-5 text-center"></select>
                         </div>
                         <div class="col-2">
                             <h1 class="pixel-font text-muted">VS</h1>
                         </div>
                         <div class="col-5">
-                            <select id="versusP2" class="form-select bg-dark text-white border-secondary pixel-font fs-5"></select>
+                            <select id="versusP2" class="form-select pixel-font fs-5 text-center"></select>
                         </div>
                     </div>
                     <button class="btn btn-versus w-100 pixel-font mb-4" onclick="calculateVersus()">PHÂN TÍCH</button>
@@ -319,11 +282,11 @@
                         <div class="display-1 pixel-font mb-2">
                             <span id="scoreP1" class="text-info">0</span> : <span id="scoreP2" class="text-danger">0</span>
                         </div>
-                        <p class="text-muted mb-4">Tỷ số thắng/thua khi chạm trán</p>
+                        <p class="text-muted mb-4">Tỷ số đối đầu</p>
                         
                         <div class="p-3 border rounded bg-dark">
-                            <h4 class="pixel-font text-warning mb-2">HIỆU SỐ TIỀN</h4>
-                            <div id="versusMoney" class="fs-4 fw-bold">0</div>
+                            <h4 class="pixel-font text-warning mb-2">SỐ DƯ NỢ</h4>
+                            <div id="versusMoney" class="fs-2 fw-bold">0</div>
                             <div id="versusMoneyDesc" class="small text-muted">---</div>
                         </div>
                     </div>
@@ -343,6 +306,7 @@
         let matches = {};
         let globalAvgStdDev = 0;
         let radarChartInstance = null;
+        let latestDateInSheet = null; // Biến lưu ngày mới nhất
 
         document.addEventListener("DOMContentLoaded", () => {
             fetchData();
@@ -350,8 +314,7 @@
 
         function fetchData() {
             Papa.parse(CSV_URL, {
-                download: true,
-                header: true,
+                download: true, header: true,
                 complete: function(results) {
                     processData(results.data);
                     renderUI();
@@ -362,90 +325,85 @@
             });
         }
 
+        function parseDateKey(dateStr) {
+            // Chuyển "1/5/2026" thành Date Object chuẩn
+            const parts = dateStr.split('/');
+            // parts[0] = day, parts[1] = month, parts[2] = year
+            return new Date(parts[2], parts[1] - 1, parts[0]);
+        }
+
         function processData(data) {
-            players = {};
-            matches = {};
+            players = {}; matches = {}; latestDateInSheet = new Date(2000, 0, 1);
 
             data.forEach(row => {
                 if (!row.Name || !row.Core || !row.Date) return;
 
                 const name = row.Name.trim().charAt(0).toUpperCase() + row.Name.trim().slice(1).toLowerCase();
                 const score = parseInt(row.Core);
-                const dateRaw = row.Date.split(' ')[0]; // dd/mm/yyyy
-                const timeRaw = row.Date.split(' ')[1] || "00:00:00";
+                const datePart = row.Date.split(' ')[0]; // dd/mm/yyyy
+                
+                // Cập nhật ngày mới nhất để vẽ lịch
+                const currentDateObj = parseDateKey(datePart);
+                if (currentDateObj > latestDateInSheet) latestDateInSheet = currentDateObj;
+
+                // Match ID logic
                 const matchId = `${row.Date}_${row.Sheet}`;
 
-                // Init Player
                 if (!players[name]) {
                     players[name] = {
-                        name: name,
-                        totalScore: 0,
-                        matchCount: 0,
-                        wins: 0,
-                        losses: 0,
-                        scores: [],
-                        dates: {}, // Map date -> score
-                        matches: [], // List of matchIDs
+                        name: name, totalScore: 0, matchCount: 0, wins: 0, losses: 0,
+                        scores: [], dates: {}, matches: [],
                         playTime: { day: 0, night: 0 },
-                        ledger: {}, // { opponentName: amount } (+ means took from opp, - means gave to opp)
-                        teammates: {} // { teammateName: { wins: 0, total: 0 } }
+                        ledger: {}, teammates: {}
                     };
                 }
-                
-                // Init Match
-                if (!matches[matchId]) {
-                    matches[matchId] = { id: matchId, date: dateRaw, players: [], scores: {} };
-                }
+                if (!matches[matchId]) matches[matchId] = { id: matchId, players: [], scores: {} };
 
-                // Update basic stats
                 players[name].totalScore += score;
                 players[name].matchCount++;
                 players[name].scores.push(score);
                 if (score > 0) players[name].wins++; else players[name].losses++;
+                
+                // Cộng dồn điểm trong ngày cho Heatmap
+                if (!players[name].dates[datePart]) players[name].dates[datePart] = 0;
+                players[name].dates[datePart] += score;
+
                 players[name].matches.push(matchId);
                 
-                if (!players[name].dates[dateRaw]) players[name].dates[dateRaw] = 0;
-                players[name].dates[dateRaw] += score;
-
-                // Day/Night (6am - 6pm)
+                // Day/Night count
+                const timeRaw = row.Date.split(' ')[1] || "00:00:00";
                 const hour = parseInt(timeRaw.split(':')[0]);
                 if (hour >= 6 && hour < 18) players[name].playTime.day++; else players[name].playTime.night++;
 
-                // Update Match
                 matches[matchId].players.push(name);
                 matches[matchId].scores[name] = score;
             });
 
-            // --- ADVANCED CALCULATIONS ---
+            // Calculate Ledger & Archetypes
+            calcAdvancedStats();
+        }
+
+        function calcAdvancedStats() {
             const allStdDevs = [];
 
-            // 1. Ledger & Synergy Logic
+            // Ledger Logic
             Object.values(matches).forEach(m => {
                 const winners = m.players.filter(p => m.scores[p] > 0);
                 const losers = m.players.filter(p => m.scores[p] < 0);
-                const totalWinPot = winners.reduce((sum, p) => sum + m.scores[p], 0);
-                const totalLossPot = losers.reduce((sum, p) => sum + Math.abs(m.scores[p]), 0);
-
-                // Ledger: Distribute money logically
-                if (totalWinPot > 0 && totalLossPot > 0) {
-                    winners.forEach(winner => {
-                        const winShare = m.scores[winner] / totalWinPot; // % of pot this winner took
-                        losers.forEach(loser => {
-                            const lossAmount = Math.abs(m.scores[loser]);
-                            const transfer = lossAmount * winShare; // Money moved from Loser to Winner
-                            
-                            // Update Winner's ledger
-                            if(!players[winner].ledger[loser]) players[winner].ledger[loser] = 0;
-                            players[winner].ledger[loser] += transfer;
-
-                            // Update Loser's ledger
-                            if(!players[loser].ledger[winner]) players[loser].ledger[winner] = 0;
-                            players[loser].ledger[winner] -= transfer;
+                const totalWin = winners.reduce((sum, p) => sum + m.scores[p], 0);
+                
+                if (totalWin > 0) {
+                    winners.forEach(w => {
+                        const share = m.scores[w] / totalWin;
+                        losers.forEach(l => {
+                            const amt = Math.abs(m.scores[l]) * share;
+                            if(!players[w].ledger[l]) players[w].ledger[l]=0; players[w].ledger[l] += amt;
+                            if(!players[l].ledger[w]) players[l].ledger[w]=0; players[l].ledger[w] -= amt;
                         });
                     });
                 }
-
-                // Synergy: Record win/loss with teammates
+                
+                // Synergy Logic
                 m.players.forEach(p1 => {
                     m.players.forEach(p2 => {
                         if (p1 !== p2) {
@@ -457,53 +415,43 @@
                 });
             });
 
-            // 2. Player Stats (StdDev, Archetype)
+            // Stats
             Object.values(players).forEach(p => {
                 const mean = p.scores.reduce((a,b)=>a+b,0)/p.scores.length;
                 const variance = p.scores.reduce((a,b)=>a+Math.pow(b-mean,2),0)/p.scores.length;
                 p.stdDev = Math.sqrt(variance);
                 allStdDevs.push(p.stdDev);
-
                 p.winRate = (p.wins / p.matchCount) * 100;
             });
-
             globalAvgStdDev = allStdDevs.reduce((a,b)=>a+b,0) / allStdDevs.length;
 
-            // Assign Archetypes
+            // Archetypes & Social Best/Worst
             Object.values(players).forEach(p => {
                 const isRisky = p.stdDev > globalAvgStdDev;
-                const isWinner = p.winRate >= 45; // Threshold for "winning side"
+                const isWinner = p.winRate >= 45;
 
                 if (isWinner && isRisky) { p.archetype = "SHARK"; p.quote = "Kẻ săn mồi vùng nước sâu"; }
-                else if (isWinner && !isRisky) { p.archetype = "TURTLE"; p.quote = "Chậm mà chắc, thắng bền vững"; }
-                else if (!isWinner && isRisky) { p.archetype = "GAMBLER"; p.quote = "Được ăn cả, ngã về không"; }
-                else { p.archetype = "ATM"; p.quote = "Nhà tài trợ vàng của giải"; }
+                else if (isWinner && !isRisky) { p.archetype = "TURTLE"; p.quote = "Chậm mà chắc"; }
+                else if (!isWinner && isRisky) { p.archetype = "GAMBLER"; p.quote = "Được ăn cả ngã về không"; }
+                else { p.archetype = "ATM"; p.quote = "Nhà tài trợ vàng"; }
 
-                // Find Social Stats
-                // Ledger
-                let maxWinVal = -1, maxWinName = "---";
-                let maxLossVal = 1, maxLossName = "---";
-                for (const [opp, val] of Object.entries(p.ledger)) {
-                    if (val > maxWinVal) { maxWinVal = val; maxWinName = opp; }
-                    if (val < maxLossVal) { maxLossVal = val; maxLossName = opp; }
+                // Find Best/Worst Ledger
+                let maxW=-1, nameW="---", maxL=1, nameL="---";
+                for(const [opp, val] of Object.entries(p.ledger)) {
+                    if(val > maxW) { maxW=val; nameW=opp; }
+                    if(val < maxL) { maxL=val; nameL=opp; }
                 }
-                p.bestPrey = maxWinName;
-                p.worstNemesis = maxLossName;
+                p.bestPrey = nameW; p.worstNemesis = nameL;
 
-                // Synergy
-                let bestSynVal = -1, bestSynName = "---";
-                let worstSynVal = 101, worstSynName = "---";
-                const baseWR = p.winRate;
-
-                for (const [mate, stats] of Object.entries(p.teammates)) {
-                    if (stats.total < 3) continue; // Ignore if played < 3 times together
-                    const mateWR = (stats.wins / stats.total) * 100;
-                    
-                    if (mateWR > bestSynVal) { bestSynVal = mateWR; bestSynName = mate; }
-                    if (mateWR < worstSynVal) { worstSynVal = mateWR; worstSynName = mate; }
+                // Find Synergy
+                let bestSynVal=-1, bestSyn="---", worstSynVal=101, worstSyn="---";
+                for(const [mate, s] of Object.entries(p.teammates)) {
+                    if(s.total < 3) continue;
+                    const wr = (s.wins/s.total)*100;
+                    if(wr > bestSynVal) { bestSynVal=wr; bestSyn=mate; }
+                    if(wr < worstSynVal) { worstSynVal=wr; worstSyn=mate; }
                 }
-                p.bestMate = bestSynName; 
-                p.worstMate = worstSynName;
+                p.bestMate = bestSyn; p.worstMate = worstSyn;
             });
         }
 
@@ -513,16 +461,14 @@
         }
 
         function renderTicker() {
-            const list = Object.values(players);
-            const top = list.reduce((a,b) => a.totalScore > b.totalScore ? a : b);
-            const bottom = list.reduce((a,b) => a.totalScore < b.totalScore ? a : b);
-            const maxGame = list.reduce((a,b) => a.matchCount > b.matchCount ? a : b);
-
+            const arr = Object.values(players);
+            if(arr.length === 0) return;
+            const top = arr.reduce((a,b)=>a.totalScore>b.totalScore?a:b);
+            const bot = arr.reduce((a,b)=>a.totalScore<b.totalScore?a:b);
             const msgs = [
-                `👑 KING OF SERVER: ${top.name} (${top.totalScore} EXP)`,
-                `💀 BÁO THỦ CỦA NĂM: ${bottom.name} (${bottom.totalScore} EXP)`,
-                `🚜 NÔNG DÂN CHĂM CHỈ: ${maxGame.name} (${maxGame.matchCount} trận)`,
-                `📢 Cập nhật Real-time từ Google Sheet`
+                `👑 KING: ${top.name} (${top.totalScore})`,
+                `💀 ĐÁY XÃ HỘI: ${bot.name} (${bot.totalScore})`,
+                `📅 Dữ liệu cập nhật đến ngày: ${latestDateInSheet.toLocaleDateString('vi-VN')}`
             ];
             document.getElementById('liveTicker').innerText = msgs.join("  +++  ");
         }
@@ -538,55 +484,54 @@
                 const rank = index + 1;
                 let rowClass = "";
                 let rankDisplay = `#${rank}`;
-                
-                if (index < 3) {
-                    rowClass = "row-god";
-                    if(rank==1) rankDisplay="👑"; if(rank==2) rankDisplay="🥈"; if(rank==3) rankDisplay="🥉";
-                } else if (index >= count - 3) {
-                    rowClass = "row-feeder";
-                    rankDisplay="💀";
-                }
+                if (index < 3) { rowClass = "row-god"; if(rank==1) rankDisplay="👑"; if(rank==2) rankDisplay="🥈"; if(rank==3) rankDisplay="🥉"; }
+                else if (index >= count - 3) { rowClass = "row-feeder"; rankDisplay="💀"; }
 
-                // Sparkline Trend (SVG)
+                // --- NEW BAR CHART LOGIC ---
                 const last5 = p.scores.slice(-5);
-                let polylinePoints = "";
-                const width = 100, height = 30;
-                const min = Math.min(...last5), max = Math.max(...last5);
-                const range = max - min || 1;
+                const maxVal = Math.max(...last5.map(Math.abs), 1); // Tránh chia cho 0
                 
-                last5.forEach((s, i) => {
-                    const x = (i / (last5.length - 1)) * width;
-                    const y = height - ((s - min) / range) * height;
-                    polylinePoints += `${x},${y} `;
+                let barHtml = `<div class="bar-chart-mini">`;
+                last5.forEach(s => {
+                    const heightPct = Math.max((Math.abs(s) / maxVal) * 100, 10); // Min height 10%
+                    const colorClass = s >= 0 ? 'bar-pos' : 'bar-neg';
+                    // Căn chỉnh: dương mọc lên (align-self: flex-end), âm mọc xuống (align-self: flex-start)
+                    // Tuy nhiên để đơn giản trong flex row, ta dùng margin-top cho âm, margin-bottom cho dương
+                    // Cách tốt nhất: dùng 2 container trên dưới, hoặc dùng transform.
+                    // Cách đơn giản nhất:
+                    const style = `height:${heightPct*0.4}px; width:6px;`; // Scale nhỏ lại chút cho vừa ô
+                    const tooltip = `title="${s}"`;
+                    
+                    // Logic hiển thị Bar: 
+                    // Dùng trick border-bottom cho dương, border-top cho âm
+                    if (s >= 0) {
+                         barHtml += `<div ${tooltip} class="bar-column bar-pos" style="height: ${heightPct*0.3}px; align-self: flex-end;"></div>`;
+                    } else {
+                         barHtml += `<div ${tooltip} class="bar-column bar-neg" style="height: ${heightPct*0.3}px; align-self: flex-start;"></div>`;
+                    }
                 });
+                barHtml += `</div>`;
+                // ---------------------------
 
-                const colorTrend = last5[last5.length-1] >= 0 ? 'var(--neon-green)' : 'var(--neon-red)';
-                
-                // Day/Night Badge
                 const timeBadge = p.playTime.night > p.playTime.day 
-                    ? '<i class="fas fa-moon text-info" title="Night Owl"></i>' 
-                    : '<i class="fas fa-sun text-warning" title="Day Walker"></i>';
+                    ? '<i class="fas fa-moon text-info"></i>' : '<i class="fas fa-sun text-warning"></i>';
 
                 const tr = document.createElement('tr');
-                tr.className = rowClass;
-                tr.style.cursor = 'pointer';
+                tr.className = rowClass; tr.style.cursor = 'pointer';
                 tr.onclick = () => openPlayerModal(p.name);
 
                 tr.innerHTML = `
                     <td class="text-center" data-label="Rank"><span class="rank-number">${rankDisplay}</span></td>
-                    <td data-label="Player">
+                    <td data-label="Thành viên">
                         <div class="fw-bold fs-5">${p.name} ${timeBadge}</div>
                         <div class="small text-muted pixel-font">${p.archetype}</div>
                     </td>
                     <td class="text-center pixel-font fs-5" data-label="Trận">${p.matchCount}</td>
-                    <td class="text-center pixel-font fs-5 ${p.winRate>=50?'text-success':'text-danger'}" data-label="Win Rate">${p.winRate.toFixed(0)}%</td>
+                    <td class="text-center pixel-font fs-5 ${p.winRate>=50?'text-success':'text-danger'}" data-label="Win%">${p.winRate.toFixed(0)}%</td>
                     <td class="text-center" data-label="Phong độ">
-                        <svg width="100" height="30" style="overflow:visible;">
-                            <polyline points="${polylinePoints}" fill="none" stroke="${colorTrend}" stroke-width="2" />
-                            ${last5.map((s,i) => `<circle cx="${(i/4)*100}" cy="${30 - ((s-min)/range)*30}" r="2" fill="${colorTrend}" />`).join('')}
-                        </svg>
+                        ${barHtml}
                     </td>
-                    <td class="text-end fw-bold fs-4 pixel-font ${p.totalScore>0?'text-success':'text-danger'}" data-label="Tổng EXP">
+                    <td class="text-end fw-bold fs-4 pixel-font ${p.totalScore>0?'text-success':'text-danger'}" data-label="EXP">
                         ${p.totalScore>0?'+':''}${p.totalScore}
                     </td>
                 `;
@@ -596,83 +541,80 @@
 
         function openPlayerModal(name) {
             const p = players[name];
-            
-            // Header
             document.getElementById('modalName').innerText = p.name;
             document.getElementById('modalQuote').innerText = `"${p.quote}"`;
-            
+
             // Badge
-            const badgeDiv = document.getElementById('modalArchetypeBadge');
-            let badgeClass = "arch-atm", badgeIcon = "💸";
-            if (p.archetype === "SHARK") { badgeClass = "arch-shark"; badgeIcon = "🦈"; }
-            if (p.archetype === "TURTLE") { badgeClass = "arch-turtle"; badgeIcon = "🐢"; }
-            if (p.archetype === "GAMBLER") { badgeClass = "arch-gambler"; badgeIcon = "🎰"; }
-            
-            badgeDiv.innerHTML = `<span class="badge-archetype ${badgeClass}">${badgeIcon} ${p.archetype}</span>`;
+            let bClass="arch-atm", bIcon="💸";
+            if(p.archetype=="SHARK"){bClass="arch-shark";bIcon="🦈";}
+            if(p.archetype=="TURTLE"){bClass="arch-turtle";bIcon="🐢";}
+            if(p.archetype=="GAMBLER"){bClass="arch-gambler";bIcon="🎰";}
+            document.getElementById('modalArchetypeBadge').innerHTML = `<span class="badge-archetype ${bClass}">${bIcon} ${p.archetype}</span>`;
 
             // Social
-            document.getElementById('modalLedgerLoss').innerText = p.worstNemesis; // Bào tiền mình
-            document.getElementById('modalLedgerWin').innerText = p.bestPrey;   // Mình bào tiền
+            document.getElementById('modalLedgerLoss').innerText = p.worstNemesis;
+            document.getElementById('modalLedgerWin').innerText = p.bestPrey;
             document.getElementById('modalSynergy').innerText = p.bestMate;
-            document.getElementById('modalNemesis').innerText = p.worstMate; // Khắc tinh winrate
+            document.getElementById('modalNemesis').innerText = p.worstMate;
 
-            // Volatility Meter
-            const volatilityPct = Math.min(100, (p.stdDev / (globalAvgStdDev * 2)) * 100);
-            document.getElementById('meterCursor').style.left = `${volatilityPct}%`;
+            // Meter
+            const volPct = Math.min(100, (p.stdDev / (globalAvgStdDev * 2)) * 100);
+            document.getElementById('meterCursor').style.left = `${volPct}%`;
 
-            // Heatmap (Last 60 Days)
-            const hmContainer = document.getElementById('modalHeatmap');
-            hmContainer.innerHTML = '';
-            const today = new Date();
+            // --- FIX HEATMAP LOGIC ---
+            const hm = document.getElementById('modalHeatmap');
+            hm.innerHTML = '';
+            
+            // Dùng latestDateInSheet làm mốc thay vì ngày hiện tại
+            const endDate = new Date(latestDateInSheet);
+            
             for (let i = 59; i >= 0; i--) {
-                const d = new Date();
-                d.setDate(today.getDate() - i);
-                const dateStr = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`; // Need to match format provided by sheet. Assuming standard d/m/y without leading zeros if sheet does that. 
-                // Fix: Sheet format is d/m/yyyy based on user image. 
+                const d = new Date(endDate);
+                d.setDate(endDate.getDate() - i);
                 
-                const score = p.dates[dateStr]; // undefined if not played
+                // Format lại thành d/m/yyyy để khớp với key trong object players[name].dates
+                // Lưu ý: d.getDate() trả về 1-31, d.getMonth() trả về 0-11
+                const dateKey = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+                const score = p.dates[dateKey]; // undefined nếu không chơi
                 
                 const cell = document.createElement('div');
                 cell.className = 'heatmap-cell';
-                cell.setAttribute('data-title', `${dateStr}: ${score !== undefined ? score : 'Nghỉ'}`);
                 
                 if (score !== undefined) {
+                    cell.setAttribute('data-title', `${dateKey}: ${score}`);
                     if (score > 0) cell.style.background = 'var(--neon-green)';
                     else if (score < 0) cell.style.background = 'var(--neon-red)';
                     else cell.style.background = '#94a3b8';
-                    
-                    // Opacity
-                    const opacity = Math.min(1, Math.abs(score)/40 + 0.4);
-                    cell.style.opacity = opacity;
+                    cell.style.opacity = Math.min(1, Math.abs(score)/30 + 0.4);
+                    cell.style.border = '1px solid #fff'; // Viền sáng cho ngày có chơi
+                } else {
+                    cell.setAttribute('data-title', `${dateKey}: Nghỉ`);
+                    cell.innerText = "";
                 }
-                hmContainer.appendChild(cell);
+                hm.appendChild(cell);
             }
+            // -------------------------
 
-            // Radar Chart
             renderRadar(p);
-
             new bootstrap.Modal(document.getElementById('playerModal')).show();
         }
 
         function renderRadar(p) {
             const ctx = document.getElementById('radarChart').getContext('2d');
-            if (radarChartInstance) radarChartInstance.destroy();
-
-            // Normalize stats 0-100
-            const statDamage = Math.min(100, (Math.max(...p.scores)/50)*100);
-            const statTank = Math.min(100, (p.matchCount/20)*100); // 20 matches = 100 tank
-            const statLuck = p.winRate;
-            const statStability = Math.max(0, 100 - (p.stdDev*2));
-            const last5Win = p.scores.slice(-5).filter(s=>s>0).length;
-            const statForm = (last5Win/5)*100;
-
+            if(radarChartInstance) radarChartInstance.destroy();
             radarChartInstance = new Chart(ctx, {
                 type: 'radar',
                 data: {
                     labels: ['Sát thương', 'Độ lì', 'May mắn', 'Ổn định', 'Phong độ'],
                     datasets: [{
                         label: p.name,
-                        data: [statDamage, statTank, statLuck, statStability, statForm],
+                        data: [
+                            Math.min(100, (Math.max(...p.scores)/50)*100),
+                            Math.min(100, (p.matchCount/20)*100),
+                            p.winRate,
+                            Math.max(0, 100 - (p.stdDev*2)),
+                            (p.scores.slice(-5).filter(s=>s>0).length/5)*100
+                        ],
                         backgroundColor: 'rgba(57, 255, 20, 0.2)',
                         borderColor: '#39ff14',
                         pointBackgroundColor: '#fff',
@@ -680,86 +622,49 @@
                     }]
                 },
                 options: {
-                    scales: {
-                        r: {
-                            angleLines: { color: '#334155' },
-                            grid: { color: '#334155' },
-                            pointLabels: { color: '#fff', font: { family: 'VT323', size: 16 } },
-                            ticks: { display: false, max: 100, min: 0 }
-                        }
-                    },
-                    plugins: { legend: { display: false } },
-                    maintainAspectRatio: false
+                    scales: { r: { angleLines: {color: '#334155'}, grid: {color: '#334155'}, pointLabels: {color: '#fff', font:{family:'VT323', size:16}}, ticks: {display: false, max:100, min:0} } },
+                    plugins: { legend: {display: false} }, maintainAspectRatio: false
                 }
             });
         }
 
-        // --- VERSUS LOGIC ---
         function populateVersusDropdowns() {
-            const select1 = document.getElementById('versusP1');
-            const select2 = document.getElementById('versusP2');
+            const s1 = document.getElementById('versusP1');
+            const s2 = document.getElementById('versusP2');
             const names = Object.keys(players).sort();
-            
             names.forEach(n => {
-                select1.add(new Option(n, n));
-                select2.add(new Option(n, n));
+                s1.add(new Option(n, n));
+                s2.add(new Option(n, n));
             });
-            if(names.length > 1) select2.selectedIndex = 1;
+            if(names.length>1) s2.selectedIndex = 1;
         }
 
-        function openVersusModal() {
-            new bootstrap.Modal(document.getElementById('versusModal')).show();
-        }
+        function openVersusModal() { new bootstrap.Modal(document.getElementById('versusModal')).show(); }
 
         function calculateVersus() {
-            const p1Name = document.getElementById('versusP1').value;
-            const p2Name = document.getElementById('versusP2').value;
-
-            if (p1Name === p2Name) {
-                alert("Vui lòng chọn 2 người khác nhau!");
-                return;
-            }
-
-            let p1Wins = 0, p2Wins = 0;
-            let moneyTransfer = 0; // + means P1 took from P2, - means P2 took from P1
-
-            // Analyze shared matches
-            players[p1Name].matches.forEach(mid => {
-                if (matches[mid].players.includes(p2Name)) {
-                    const s1 = matches[mid].scores[p1Name];
-                    const s2 = matches[mid].scores[p2Name];
-
-                    if (s1 > s2) p1Wins++;
-                    if (s2 > s1) p2Wins++;
-
-                    // Calculate direct money transfer estimate (simple ledger logic)
-                    // Using pre-calc ledger from processData
+            const p1 = document.getElementById('versusP1').value;
+            const p2 = document.getElementById('versusP2').value;
+            if(p1===p2) { alert("Chọn 2 người khác nhau!"); return; }
+            
+            let w1=0, w2=0;
+            players[p1].matches.forEach(mid => {
+                if(matches[mid].players.includes(p2)) {
+                    if(matches[mid].scores[p1] > matches[mid].scores[p2]) w1++;
+                    else if(matches[mid].scores[p2] > matches[mid].scores[p1]) w2++;
                 }
             });
             
-            // Get precise ledger value
-            const ledgerVal = players[p1Name].ledger[p2Name] || 0;
-
             document.getElementById('versusResult').classList.remove('d-none');
-            document.getElementById('scoreP1').innerText = p1Wins;
-            document.getElementById('scoreP2').innerText = p2Wins;
-
-            const moneyEl = document.getElementById('versusMoney');
-            const moneyDesc = document.getElementById('versusMoneyDesc');
-
-            if (ledgerVal > 0) {
-                moneyEl.innerText = `+${Math.round(ledgerVal)}`;
-                moneyEl.className = "fs-4 fw-bold text-success";
-                moneyDesc.innerText = `${p1Name} đang "lời" từ ${p2Name}`;
-            } else if (ledgerVal < 0) {
-                moneyEl.innerText = `${Math.round(ledgerVal)}`;
-                moneyEl.className = "fs-4 fw-bold text-danger";
-                moneyDesc.innerText = `${p2Name} đang "lời" từ ${p1Name}`;
-            } else {
-                moneyEl.innerText = "0";
-                moneyEl.className = "fs-4 fw-bold text-white";
-                moneyDesc.innerText = "Hòa vốn";
-            }
+            document.getElementById('scoreP1').innerText = w1;
+            document.getElementById('scoreP2').innerText = w2;
+            
+            const ledger = players[p1].ledger[p2] || 0;
+            const mEl = document.getElementById('versusMoney');
+            const dEl = document.getElementById('versusMoneyDesc');
+            
+            if(ledger>0) { mEl.innerText=`+${Math.round(ledger)}`; mEl.className="fs-2 fw-bold text-success"; dEl.innerText=`${p1} đang lời từ ${p2}`; }
+            else if(ledger<0) { mEl.innerText=`${Math.round(ledger)}`; mEl.className="fs-2 fw-bold text-danger"; dEl.innerText=`${p2} đang lời từ ${p1}`; }
+            else { mEl.innerText="0"; mEl.className="fs-2 fw-bold text-white"; dEl.innerText="Hòa vốn"; }
         }
     </script>
 </body>
