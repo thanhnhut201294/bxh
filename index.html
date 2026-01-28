@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sát Phạt Hội - Battle Report</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Tái Tạo Năng Lượng - Battle Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -17,6 +17,7 @@
             --neon-red: #ff073a;
             --neon-blue: #00f3ff;
             --neon-gold: #ffd700;
+            --neon-purple: #bc13fe;
         }
 
         body {
@@ -25,155 +26,153 @@
             font-family: 'Roboto', sans-serif;
         }
 
-        h1, h2, h3, .pixel-font {
-            font-family: 'Press Start 2P', cursive;
+        /* Áp dụng font Pixel cho tiêu đề và số liệu quan trọng */
+        h1, h2, h3, .pixel-font, .rank-number, .modal-title {
+            font-family: 'VT323', monospace;
             text-transform: uppercase;
         }
 
-        /* Live Ticker */
-        .ticker-wrap {
-            width: 100%;
-            background-color: #000;
-            overflow: hidden;
-            border-bottom: 2px solid var(--neon-blue);
-            white-space: nowrap;
-            padding: 10px 0;
-        }
-        .ticker {
-            display: inline-block;
-            animation: marquee 20s linear infinite;
-            color: var(--neon-green);
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-        }
-        @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-
-        /* Cards */
         .glass-card {
             background: rgba(30, 41, 59, 0.9);
             border: 1px solid #334155;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(5px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
         }
 
-        /* Leaderboard Table */
-        .table-dark {
-            --bs-table-bg: transparent;
-            color: var(--text-main);
+        /* Ticker */
+        .ticker-wrap {
+            background: #000;
+            border-bottom: 2px solid var(--neon-blue);
+            white-space: nowrap;
+            overflow: hidden;
+            padding: 8px 0;
         }
-        .rank-1 { color: var(--neon-gold); text-shadow: 0 0 10px var(--neon-gold); }
-        .rank-2 { color: #c0c0c0; }
-        .rank-3 { color: #cd7f32; }
+        .ticker {
+            display: inline-block;
+            animation: marquee 25s linear infinite;
+            color: var(--neon-green);
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+        }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* TABLE STYLING */
+        .table-custom {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px; /* Khoảng cách giữa các dòng */
+        }
+        .table-custom th {
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            color: #94a3b8;
+            padding: 10px;
+            border-bottom: 1px solid #334155;
+        }
+        .table-custom td {
+            background: #1e293b;
+            padding: 15px;
+            vertical-align: middle;
+            border-top: 1px solid #334155;
+            border-bottom: 1px solid #334155;
+        }
+        .table-custom tr td:first-child { border-left: 1px solid #334155; border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+        .table-custom tr td:last-child { border-right: 1px solid #334155; border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+        /* TIER GOD (Top 3) */
+        .row-god td {
+            background: rgba(255, 215, 0, 0.1) !important;
+            border-color: var(--neon-gold) !important;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
+        }
+        .row-god .rank-number { font-size: 2.5rem; color: var(--neon-gold); text-shadow: 0 0 10px var(--neon-gold); }
+        .row-god .player-name { font-size: 1.5rem; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* TIER FEEDER (Bottom 3) */
+        .row-feeder td {
+            background: rgba(255, 7, 58, 0.1) !important;
+            border-color: var(--neon-red) !important;
+        }
+        .row-feeder .rank-number { font-size: 2rem; color: var(--neon-red); }
+        .row-feeder .player-name { color: #fca5a5; }
+
+        /* Rank Colors */
+        .rank-1 { color: var(--neon-gold); }
+        .rank-2 { color: #C0C0C0; } /* Silver */
+        .rank-3 { color: #CD7F32; } /* Bronze */
 
         /* Badges */
-        .badge-class {
-            font-size: 0.7em;
-            margin-left: 5px;
-            padding: 3px 6px;
+        .badge-pixel {
+            font-family: 'VT323', monospace;
+            font-size: 1.1rem;
+            padding: 4px 8px;
             border-radius: 4px;
+            margin-left: 5px;
         }
-        .class-assassin { background-color: rgba(255, 7, 58, 0.2); color: var(--neon-red); border: 1px solid var(--neon-red); }
-        .class-tanker { background-color: rgba(0, 243, 255, 0.2); color: var(--neon-blue); border: 1px solid var(--neon-blue); }
-        .class-support { background-color: rgba(57, 255, 20, 0.2); color: var(--neon-green); border: 1px solid var(--neon-green); }
-        .class-noob { background-color: #475569; color: #94a3b8; border: 1px solid #94a3b8; }
+        .bg-day { background: #f59e0b; color: #000; }
+        .bg-night { background: #3b82f6; color: #fff; }
 
-        /* Sparkline & EXP Bar */
-        .exp-bar-container {
-            width: 100px;
-            height: 4px;
-            background: #334155;
-            border-radius: 2px;
-            margin-top: 5px;
-        }
-        .exp-bar-fill {
-            height: 100%;
-            background: var(--neon-blue);
-            border-radius: 2px;
-        }
-        .sparkline {
-            width: 100px;
-            height: 30px;
-        }
-
-        /* Heatmap Modal */
+        /* Modal Elements */
         .heatmap-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-            gap: 5px;
+            grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+            gap: 4px;
+            margin-top: 10px;
         }
         .heatmap-cell {
-            width: 100%;
-            padding-top: 100%; /* Square aspect ratio */
+            aspect-ratio: 1;
+            border-radius: 3px;
+            background: #334155;
             position: relative;
-            border-radius: 4px;
-            background-color: #334155;
-            cursor: pointer;
         }
-        .heatmap-cell:hover { transform: scale(1.1); transition: 0.2s; border: 1px solid white; }
-        .heatmap-tooltip {
+        .heatmap-cell:hover::after {
+            content: attr(data-title);
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 10px; color: transparent;
+            bottom: 100%; left: 50%; transform: translateX(-50%);
+            background: #000; color: #fff; padding: 2px 5px;
+            font-size: 10px; white-space: nowrap; z-index: 10;
+            pointer-events: none;
         }
-        
+
         /* Loading */
         #loading {
             position: fixed; top:0; left:0; right:0; bottom:0;
             background: var(--bg-dark); z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-            flex-direction: column;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
     </style>
 </head>
 <body>
 
     <div id="loading">
-        <h2 class="pixel-font" style="color: var(--neon-green);">LOADING DATA...</h2>
+        <h1 class="pixel-font" style="font-size: 3rem; color: var(--neon-green);">LOADING DATA...</h1>
         <div class="spinner-border text-info" role="status"></div>
     </div>
 
     <div class="ticker-wrap">
-        <div class="ticker" id="liveTicker">Waiting for data stream...</div>
+        <div class="ticker" id="liveTicker">Đang kết nối tới máy chủ Google Sheet...</div>
     </div>
 
-    <div class="container-fluid p-4">
+    <div class="container py-5">
         <div class="text-center mb-5">
-            <h1 class="display-4 pixel-font text-white mb-3">
-                <i class="fas fa-gamepad text-info"></i> BATTLE REPORT
+            <h1 class="pixel-font display-3 mb-2" style="text-shadow: 2px 2px 0 var(--neon-blue);">
+                <i class="fas fa-skull-crossbones"></i> BATTLE REPORT
             </h1>
-            <p class="text-muted">Thống kê điểm số realtime - Ai là trùm, ai là "ATM"?</p>
+            <p class="text-muted pixel-font fs-4">Thống kê Sát Phạt Hội - Realtime</p>
         </div>
 
-        <div class="row mb-5">
-            <div class="col-12 col-lg-8 mx-auto">
-                <div class="glass-card p-4">
-                    <h5 class="pixel-font mb-4 text-center" style="color: var(--neon-gold);">
-                        <i class="fas fa-crosshairs"></i> The Quadrant (Phân loại)
-                    </h5>
-                    <canvas id="quadrantChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="glass-card p-4">
-            <h5 class="pixel-font mb-4" style="color: var(--neon-green);">
-                <i class="fas fa-trophy"></i> LEADERBOARD
-            </h5>
+        <div class="glass-card p-3 p-md-4">
             <div class="table-responsive">
-                <table class="table table-dark table-hover align-middle">
+                <table class="table-custom text-nowrap">
                     <thead>
-                        <tr class="text-uppercase text-muted" style="font-size: 0.8rem;">
-                            <th>Rank</th>
-                            <th>Player</th>
-                            <th class="text-center">Phong độ (5 trận gần nhất)</th>
-                            <th class="text-center">Matches</th>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>Người chơi (Player)</th>
+                            <th class="text-center">Số trận</th>
                             <th class="text-center">Win Rate</th>
-                            <th class="text-end">Total EXP (Score)</th>
+                            <th class="text-center">Phong độ (5 trận)</th>
+                            <th class="text-end">Tổng Điểm (EXP)</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboardBody">
@@ -181,43 +180,64 @@
                 </table>
             </div>
         </div>
+        
+        <div class="text-center mt-4 text-muted pixel-font">
+            Dữ liệu được cập nhật tự động từ Google Sheet
+        </div>
     </div>
 
     <div class="modal fade" id="playerModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content glass-card" style="background: #1e293b; color: white;">
                 <div class="modal-header border-bottom border-secondary">
-                    <h5 class="modal-title pixel-font" id="modalPlayerName">Player Name</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h2 class="modal-title fs-2" id="modalName" style="color: var(--neon-green);">PLAYER</h2>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-4 text-center border-end border-secondary">
-                            <div class="mb-4">
-                                <h1 class="display-1" id="modalRank">#1</h1>
-                                <span class="badge bg-warning text-dark" id="modalClass">CLASS</span>
+                    <div class="row g-4">
+                        <div class="col-md-5 text-center border-end border-secondary">
+                            <div class="mb-3">
+                                <h1 class="display-1 pixel-font" id="modalRank" style="color: var(--neon-gold);">#1</h1>
+                                <div id="modalBadges"></div>
                             </div>
-                            <ul class="list-group list-group-flush bg-transparent text-start">
+                            
+                            <div style="position: relative; height: 250px; width: 100%;">
+                                <canvas id="radarChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="col-md-7">
+                            <div class="row mb-3 pixel-font fs-5">
+                                <div class="col-6">
+                                    <div class="p-2 border border-secondary rounded text-center">
+                                        <div class="text-muted fs-6">Cao nhất (Max)</div>
+                                        <div class="text-success" id="modalMax">+0</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 border border-secondary rounded text-center">
+                                        <div class="text-muted fs-6">Thấp nhất (Min)</div>
+                                        <div class="text-danger" id="modalMin">-0</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <ul class="list-group list-group-flush bg-transparent mb-4">
                                 <li class="list-group-item bg-transparent text-white d-flex justify-content-between">
-                                    <span><i class="fas fa-skull text-danger"></i> Nemesis (Kỵ giơ):</span>
-                                    <strong id="modalNemesis">---</strong>
+                                    <span>💀 Khắc tinh (Thua nhiều nhất):</span>
+                                    <strong id="modalNemesis" class="text-danger">---</strong>
                                 </li>
                                 <li class="list-group-item bg-transparent text-white d-flex justify-content-between">
-                                    <span><i class="fas fa-bolt text-warning"></i> Max Score:</span>
-                                    <strong id="modalMax">0</strong>
-                                </li>
-                                <li class="list-group-item bg-transparent text-white d-flex justify-content-between">
-                                    <span><i class="fas fa-level-down-alt text-info"></i> Min Score:</span>
-                                    <strong id="modalMin">0</strong>
+                                    <span>🍖 Con mồi (Thắng nhiều nhất):</span>
+                                    <strong id="modalPrey" class="text-success">---</strong>
                                 </li>
                             </ul>
-                        </div>
-                        <div class="col-md-8">
-                            <h6 class="text-uppercase text-muted mb-3">Lịch sử chinh chiến (Heatmap)</h6>
+
+                            <h5 class="pixel-font border-bottom border-secondary pb-1">Lịch sử (Heatmap)</h5>
                             <div id="modalHeatmap" class="heatmap-grid"></div>
-                            <div class="d-flex justify-content-between mt-2 text-muted" style="font-size: 0.7rem;">
-                                <span>Thua sấp mặt (Đỏ)</span>
-                                <span>Thắng đậm (Xanh)</span>
+                            <div class="d-flex justify-content-between mt-1" style="font-size: 0.7rem; color: #94a3b8;">
+                                <span>Thua (Đỏ)</span>
+                                <span>Thắng (Xanh)</span>
                             </div>
                         </div>
                     </div>
@@ -231,15 +251,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        // --- CONFIGURATION ---
+        // LINK CSV CỦA BẠN
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRvJLnrZU9iHP1XzU8JMQD3C2xPzkKrHMIzWsvpyVDmayFK_dd5-xwnNtBshPtLYauwd8GnaK5gS4FH/pub?gid=1796395162&single=true&output=csv";
-        
-        // --- GLOBAL DATA ---
-        let rawData = [];
+
         let players = {};
         let matches = {};
-        
-        // --- INIT ---
+        let radarChartInstance = null;
+
         document.addEventListener("DOMContentLoaded", () => {
             fetchData();
         });
@@ -249,327 +267,287 @@
                 download: true,
                 header: true,
                 complete: function(results) {
-                    rawData = results.data;
-                    processData(rawData);
+                    processData(results.data);
                     renderUI();
                     document.getElementById('loading').style.display = 'none';
                 },
-                error: function(err) {
-                    alert("Lỗi tải dữ liệu: " + err);
-                }
+                error: (err) => alert("Lỗi tải data: " + err)
             });
         }
 
-        // --- DATA PROCESSING LOGIC ---
         function processData(data) {
-            // Reset
             players = {};
             matches = {};
 
             data.forEach(row => {
                 if (!row.Name || !row.Core || !row.Date) return;
 
-                // 1. Normalize
+                // Chuẩn hóa tên & dữ liệu
                 const name = row.Name.trim().charAt(0).toUpperCase() + row.Name.trim().slice(1).toLowerCase();
                 const score = parseInt(row.Core);
-                const dateRaw = row.Date.split(' ')[0]; // Just date for heatmap
+                const dateRaw = row.Date.split(' ')[0]; // dd/mm/yyyy
+                const timeRaw = row.Date.split(' ')[1] || "00:00:00";
                 
-                // Match ID Logic: Date + Time + Sheet
-                // Giả sử row.Date format là "1/5/2026 15:20:08"
+                // Match ID = Date + Time + Sheet
                 const matchId = `${row.Date}_${row.Sheet}`;
 
-                // 2. Init Player if not exists
                 if (!players[name]) {
                     players[name] = {
                         name: name,
                         totalScore: 0,
                         matchCount: 0,
                         wins: 0,
-                        losses: 0, // Score < 0
-                        scores: [], // History for sparkline
-                        matchHistory: [], // Detailed objects
-                        dates: {}, // For heatmap
-                        nemesisCounts: {} // To track who beats them
+                        losses: 0,
+                        scores: [],
+                        dates: {},
+                        nemesisMap: {}, // Bị ai đánh bại
+                        preyMap: {}, // Đánh bại ai
+                        playTime: { day: 0, night: 0 } // Đếm số trận sáng/tối
                     };
                 }
 
-                // 3. Init Match if not exists
                 if (!matches[matchId]) {
-                    matches[matchId] = {
-                        id: matchId,
-                        date: dateRaw,
-                        players: [],
-                        scores: {}
-                    };
+                    matches[matchId] = { players: [], scores: {} };
                 }
 
-                // 4. Populate Data
+                // Cập nhật chỉ số cơ bản
                 players[name].totalScore += score;
-                players[name].matchCount += 1;
+                players[name].matchCount++;
                 players[name].scores.push(score);
-                if (score > 0) players[name].wins++;
-                if (score < 0) players[name].losses++;
-                
-                // Heatmap data
+                if (score > 0) players[name].wins++; else players[name].losses++;
+
+                // Heatmap
                 if (!players[name].dates[dateRaw]) players[name].dates[dateRaw] = 0;
                 players[name].dates[dateRaw] += score;
 
-                // Match data
+                // Match Tracking
                 matches[matchId].players.push(name);
                 matches[matchId].scores[name] = score;
+
+                // Day/Night Logic (Giả sử 6h - 18h là Day)
+                const hour = parseInt(timeRaw.split(':')[0]);
+                if (hour >= 6 && hour < 18) players[name].playTime.day++;
+                else players[name].playTime.night++;
             });
 
-            // 5. Advanced Calculations (Classes, Nemesis)
+            // Xử lý Nemesis/Prey & Class
             calculateAdvancedStats();
         }
 
         function calculateAdvancedStats() {
-            Object.values(matches).forEach(match => {
-                // Find winners and losers in this match
-                const participants = match.players;
-                const winners = participants.filter(p => match.scores[p] > 0);
-                const losers = participants.filter(p => match.scores[p] < 0);
+            // Nemesis logic
+            Object.values(matches).forEach(m => {
+                const winners = m.players.filter(p => m.scores[p] > 0);
+                const losers = m.players.filter(p => m.scores[p] < 0);
+                
+                losers.forEach(l => {
+                    winners.forEach(w => {
+                        if (!players[l].nemesisMap[w]) players[l].nemesisMap[w] = 0;
+                        players[l].nemesisMap[w]++; // l thua w
 
-                losers.forEach(loserName => {
-                    winners.forEach(winnerName => {
-                        if (!players[loserName].nemesisCounts[winnerName]) {
-                            players[loserName].nemesisCounts[winnerName] = 0;
-                        }
-                        players[loserName].nemesisCounts[winnerName]++;
+                        if (!players[w].preyMap[l]) players[w].preyMap[l] = 0;
+                        players[w].preyMap[l]++; // w thắng l
                     });
                 });
             });
 
-            // Calculate Classes based on StdDev & Avg Score
+            // Tính toán cuối cùng cho từng player
             Object.values(players).forEach(p => {
-                const avg = p.totalScore / p.matchCount;
+                // Find Max Nemesis
+                p.nemesis = getMaxKey(p.nemesisMap);
+                p.prey = getMaxKey(p.preyMap);
                 
-                // Calculate Standard Deviation
-                const mean = p.scores.reduce((a, b) => a + b, 0) / p.scores.length;
-                const variance = p.scores.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / p.scores.length;
+                // Stats for Radar
+                const avgScore = p.totalScore / p.matchCount;
+                const winRate = (p.wins / p.matchCount) * 100;
+                const maxScore = Math.max(...p.scores);
+                
+                // Tính độ ổn định (Standard Deviation nghịch đảo - càng thấp càng tốt)
+                const mean = p.scores.reduce((a,b)=>a+b,0)/p.scores.length;
+                const variance = p.scores.reduce((a,b)=>a+Math.pow(b-mean,2),0)/p.scores.length;
                 const stdDev = Math.sqrt(variance);
-
-                p.stdDev = stdDev;
-                p.avgScore = avg;
-
-                // Assign Class
-                if (stdDev > 15 && avg > 5) p.class = "Assassin (Sát thủ)";
-                else if (stdDev > 15 && avg < 0) p.class = "Gambler (Con bạc)";
-                else if (stdDev < 10 && avg < 0) p.class = "Feeder (Hiến máu)";
-                else if (stdDev < 10 && avg > 0) p.class = "Support (Hỗ trợ)";
-                else p.class = "Civilian (Dân thường)";
                 
-                // Find Nemesis (Max count)
-                let maxNemesis = "None";
-                let maxCount = 0;
-                for (const [enemy, count] of Object.entries(p.nemesisCounts)) {
-                    if (count > maxCount) {
-                        maxCount = count;
-                        maxNemesis = enemy;
-                    }
-                }
-                p.nemesis = maxNemesis;
+                p.stats = {
+                    damage: Math.min(100, (maxScore / 50) * 100), // Max điểm
+                    tank: Math.min(100, (p.matchCount / 20) * 100), // Số trận (giả sử 20 là nhiều)
+                    luck: winRate,
+                    stability: Math.max(0, 100 - stdDev), // Ổn định
+                    form: calculateRecentForm(p.scores) // Điểm phong độ 5 trận cuối
+                };
             });
         }
 
-        // --- UI RENDERING ---
+        function getMaxKey(obj) {
+            let maxKey = "---";
+            let maxVal = 0;
+            for(const [k, v] of Object.entries(obj)) {
+                if(v > maxVal) { maxVal = v; maxKey = k; }
+            }
+            return maxKey;
+        }
+
+        function calculateRecentForm(scores) {
+            const last5 = scores.slice(-5);
+            const positive = last5.filter(s => s > 0).length;
+            return (positive / last5.length) * 100;
+        }
+
         function renderUI() {
-            renderTicker();
-            renderQuadrant();
             renderLeaderboard();
+            renderTicker();
         }
 
         function renderTicker() {
-            const playerList = Object.values(players);
-            const topScore = playerList.reduce((prev, current) => (prev.totalScore > current.totalScore) ? prev : current);
-            const mostMatches = playerList.reduce((prev, current) => (prev.matchCount > current.matchCount) ? prev : current);
+            const sorted = Object.values(players).sort((a,b) => b.totalScore - a.totalScore);
+            const top = sorted[0];
+            const bottom = sorted[sorted.length-1];
             
-            const messages = [
-                `👑 TOP SERVER: ${topScore.name} (${topScore.totalScore} EXP)`,
-                `🚜 NÔNG DÂN CHĂM CHỈ: ${mostMatches.name} (${mostMatches.matchCount} trận)`,
-                `📢 BẢN TIN: Hệ thống vừa cập nhật dữ liệu mới nhất!`,
-                `⚠️ CẢNH BÁO: Các "ATM di động" hãy cẩn thận!`
+            const msgs = [
+                `👑 TOP 1 SERVER: ${top.name} (${top.totalScore} EXP)`,
+                `💀 BÁO THỦ: ${bottom.name} (${bottom.totalScore} EXP)`,
+                `📅 Dữ liệu cập nhật mới nhất từ Google Sheet`,
+                `🔥 Chiến trường rực lửa!`
             ];
-            
-            document.getElementById('liveTicker').innerHTML = messages.join(" &nbsp;&nbsp; | &nbsp;&nbsp; ");
-        }
-
-        function renderQuadrant() {
-            const ctx = document.getElementById('quadrantChart').getContext('2d');
-            const dataPoints = Object.values(players).map(p => ({
-                x: p.matchCount,
-                y: p.avgScore,
-                name: p.name,
-                class: p.class
-            }));
-
-            new Chart(ctx, {
-                type: 'scatter',
-                data: {
-                    datasets: [{
-                        label: 'Player Distribution',
-                        data: dataPoints,
-                        backgroundColor: (ctx) => {
-                            const val = ctx.raw?.y;
-                            return val > 0 ? '#39ff14' : '#ff073a';
-                        },
-                        pointRadius: 6,
-                        pointHoverRadius: 10
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.raw.name} (${context.raw.class})`;
-                                }
-                            }
-                        },
-                        annotation: {
-                            // Can add lines to divide quadrants later
-                        }
-                    },
-                    scales: {
-                        x: { 
-                            title: { display: true, text: 'Số Trận (Kinh Nghiệm)', color: '#94a3b8' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#e2e8f0' }
-                        },
-                        y: { 
-                            title: { display: true, text: 'Điểm Trung Bình (Kỹ Năng)', color: '#94a3b8' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#e2e8f0' }
-                        }
-                    }
-                }
-            });
+            document.getElementById('liveTicker').innerText = msgs.join("  +++  ");
         }
 
         function renderLeaderboard() {
             const tbody = document.getElementById('leaderboardBody');
-            const sortedPlayers = Object.values(players).sort((a, b) => b.totalScore - a.totalScore);
-            const maxMatches = Math.max(...sortedPlayers.map(p => p.matchCount));
-
             tbody.innerHTML = '';
+            
+            const sortedPlayers = Object.values(players).sort((a, b) => b.totalScore - a.totalScore);
+            const totalPlayers = sortedPlayers.length;
 
             sortedPlayers.forEach((p, index) => {
                 const rank = index + 1;
-                let rankClass = '';
-                let icon = '';
-                
-                if (rank === 1) { rankClass = 'rank-1'; icon = '<i class="fas fa-crown"></i>'; }
-                else if (rank === 2) { rankClass = 'rank-2'; }
-                else if (rank === 3) { rankClass = 'rank-3'; }
+                let rowClass = '';
+                let rankIcon = `#${rank}`;
 
-                // Determine Class Badge Color
-                let classColor = 'class-noob';
-                if (p.class.includes('Assassin')) classColor = 'class-assassin';
-                if (p.class.includes('Tanker')) classColor = 'class-tanker';
-                if (p.class.includes('Support')) classColor = 'class-support';
+                // Logic phân loại Tier S và F
+                if (index < 3) {
+                    rowClass = 'row-god'; // Top 3
+                    if(rank === 1) rankIcon = '👑'; 
+                    if(rank === 2) rankIcon = '🥈'; 
+                    if(rank === 3) rankIcon = '🥉'; 
+                } else if (index >= totalPlayers - 3) {
+                    rowClass = 'row-feeder'; // Bottom 3
+                    rankIcon = '💀';
+                }
 
-                // Win Rate
-                const winRate = ((p.wins / p.matchCount) * 100).toFixed(0);
-                
-                // Sparkline Data (Last 5 matches)
+                // Winrate Color
+                const wr = ((p.wins / p.matchCount) * 100).toFixed(0);
+                const wrColor = wr >= 50 ? 'text-success' : 'text-danger';
+
+                // Sparkline Trend (5 trận gần nhất)
                 const last5 = p.scores.slice(-5);
-                const sparklineId = `spark_${index}`;
+                const trendHtml = last5.map(s => {
+                    const color = s >= 0 ? 'var(--neon-green)' : 'var(--neon-red)';
+                    const height = Math.min(100, Math.abs(s)*2) + 10; // Simple height scaling
+                    return `<div style="width:4px; height:${height}%; background:${color}; display:inline-block; margin-right:2px; border-radius:1px;"></div>`;
+                }).join('');
 
                 const tr = document.createElement('tr');
+                tr.className = rowClass;
+                tr.onclick = () => showPlayerModal(p.name);
+                tr.style.cursor = 'pointer';
+                
                 tr.innerHTML = `
-                    <td class="fw-bold ${rankClass}" style="font-family: 'Press Start 2P'; font-size: 1.2em;">${rank}</td>
+                    <td class="text-center"><span class="rank-number ${'rank-'+rank}">${rankIcon}</span></td>
                     <td>
-                        <div class="d-flex align-items-center cursor-pointer" onclick="showPlayerDetail('${p.name}')" style="cursor: pointer;">
-                            <div>
-                                <strong class="fs-5">${icon} ${p.name}</strong>
-                                <span class="badge badge-class ${classColor}">${p.class}</span>
-                                <div class="exp-bar-container" title="Kinh nghiệm: ${p.matchCount} trận">
-                                    <div class="exp-bar-fill" style="width: ${(p.matchCount / maxMatches) * 100}%"></div>
-                                </div>
-                            </div>
+                        <div class="player-name fw-bold">${p.name}</div>
+                        <div class="small text-muted" style="font-family:'VT323'; font-size:1.1rem;">
+                            ${p.playTime.night > p.playTime.day ? '<i class="fas fa-moon text-info"></i> NightOwl' : '<i class="fas fa-sun text-warning"></i> DayWalker'}
                         </div>
                     </td>
-                    <td class="text-center">
-                        <canvas id="${sparklineId}" class="sparkline"></canvas>
+                    <td class="text-center pixel-font fs-4 text-white">${p.matchCount}</td>
+                    <td class="text-center pixel-font fs-4 ${wrColor}">${wr}%</td>
+                    <td class="text-center" style="height: 50px; vertical-align:middle;">
+                        <div style="height:30px; display:flex; align-items:flex-end; justify-content:center;">${trendHtml}</div>
                     </td>
-                    <td class="text-center fw-bold">${p.matchCount}</td>
-                    <td class="text-center ${winRate > 50 ? 'text-success' : 'text-danger'}">${winRate}%</td>
-                    <td class="text-end fw-bold fs-4 ${p.totalScore > 0 ? 'text-success' : 'text-danger'}">
+                    <td class="text-end pixel-font fs-3 fw-bold ${p.totalScore > 0 ? 'text-success' : 'text-danger'}">
                         ${p.totalScore > 0 ? '+' : ''}${p.totalScore}
                     </td>
                 `;
                 tbody.appendChild(tr);
-
-                // Draw Sparkline
-                drawSparkline(sparklineId, last5);
             });
         }
 
-        function drawSparkline(canvasId, data) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: [1,2,3,4,5],
-                    datasets: [{
-                        data: data,
-                        borderColor: data[data.length-1] >= 0 ? '#39ff14' : '#ff073a',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        pointRadius: 0
-                    }]
-                },
-                options: {
-                    responsive: false,
-                    maintainAspectRatio: false,
-                    plugins: { legend: {display: false}, tooltip: {enabled: false} },
-                    scales: { x: {display: false}, y: {display: false} }
-                }
-            });
-        }
-
-        function showPlayerDetail(name) {
+        function showPlayerModal(name) {
             const p = players[name];
-            document.getElementById('modalPlayerName').innerText = p.name.toUpperCase();
-            document.getElementById('modalRank').innerText = `#${Object.values(players).sort((a,b)=>b.totalScore-a.totalScore).findIndex(x=>x.name===name)+1}`;
-            document.getElementById('modalClass').innerText = p.class;
-            document.getElementById('modalNemesis').innerText = p.nemesis;
-            document.getElementById('modalMax').innerText = Math.max(...p.scores);
-            document.getElementById('modalMin').innerText = Math.min(...p.scores);
             
-            // Heatmap Render
-            const heatmapContainer = document.getElementById('modalHeatmap');
-            heatmapContainer.innerHTML = '';
+            document.getElementById('modalName').innerText = p.name;
+            const rank = Object.values(players).sort((a,b)=>b.totalScore-a.totalScore).findIndex(x=>x.name===name) + 1;
+            document.getElementById('modalRank').innerText = `#${rank}`;
             
-            // Generate last 30 days dummy or real dates
-            // For simplicity, we iterate object dates
-            const sortedDates = Object.keys(p.dates).sort((a,b) => new Date(a) - new Date(b));
-            
-            if (sortedDates.length === 0) {
-                heatmapContainer.innerHTML = '<p class="text-muted">Chưa có dữ liệu</p>';
-            } else {
-                sortedDates.forEach(date => {
-                    const score = p.dates[date];
-                    const div = document.createElement('div');
-                    div.className = 'heatmap-cell';
-                    
-                    // Color Logic
-                    if (score > 20) div.style.backgroundColor = 'var(--neon-green)';
-                    else if (score > 0) div.style.backgroundColor = '#15803d'; // Dark green
-                    else if (score === 0) div.style.backgroundColor = '#475569'; // Gray
-                    else if (score > -20) div.style.backgroundColor = '#991b1b'; // Dark red
-                    else div.style.backgroundColor = 'var(--neon-red)';
+            // Badges
+            const badgeContainer = document.getElementById('modalBadges');
+            let badgeHtml = '';
+            if (p.playTime.night > p.playTime.day) badgeHtml += '<span class="badge badge-pixel bg-night">🦉 Night Owl</span>';
+            else badgeHtml += '<span class="badge badge-pixel bg-day">☀️ Day Walker</span>';
+            badgeContainer.innerHTML = badgeHtml;
 
-                    // Tooltip
-                    div.innerHTML = `<div class="heatmap-tooltip" title="${date}: ${score} điểm"></div>`;
-                    heatmapContainer.appendChild(div);
-                });
-            }
+            // Stats
+            document.getElementById('modalNemesis').innerText = p.nemesis;
+            document.getElementById('modalPrey').innerText = p.prey;
+            document.getElementById('modalMax').innerText = (Math.max(...p.scores) > 0 ? '+' : '') + Math.max(...p.scores);
+            document.getElementById('modalMin').innerText = Math.min(...p.scores);
+
+            // Heatmap
+            const hm = document.getElementById('modalHeatmap');
+            hm.innerHTML = '';
+            const dates = Object.keys(p.dates).sort((a,b) => new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-')));
+            dates.forEach(d => {
+                const s = p.dates[d];
+                const cell = document.createElement('div');
+                cell.className = 'heatmap-cell';
+                cell.setAttribute('data-title', `${d}: ${s}`);
+                if (s > 0) cell.style.background = 'var(--neon-green)';
+                else if (s < 0) cell.style.background = 'var(--neon-red)';
+                else cell.style.background = '#64748b';
+                
+                // Opacity based on magnitude
+                const opacity = Math.min(1, Math.abs(s) / 30 + 0.3);
+                cell.style.opacity = opacity;
+                
+                hm.appendChild(cell);
+            });
+
+            // Radar Chart
+            renderRadarChart(p);
 
             const modal = new bootstrap.Modal(document.getElementById('playerModal'));
             modal.show();
+        }
+
+        function renderRadarChart(p) {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            if(radarChartInstance) radarChartInstance.destroy();
+
+            radarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Sát Thương', 'Độ Lì', 'May Mắn', 'Ổn Định', 'Phong Độ'],
+                    datasets: [{
+                        label: p.name,
+                        data: [p.stats.damage, p.stats.tank, p.stats.luck, p.stats.stability, p.stats.form],
+                        backgroundColor: 'rgba(57, 255, 20, 0.2)',
+                        borderColor: '#39ff14',
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#39ff14'
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            angleLines: { color: '#334155' },
+                            grid: { color: '#334155' },
+                            pointLabels: { color: '#fff', font: { family: 'VT323', size: 16 } },
+                            ticks: { display: false, max: 100, min: 0 }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
         }
     </script>
 </body>
