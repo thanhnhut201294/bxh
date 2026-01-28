@@ -26,12 +26,16 @@
             font-family: 'Roboto', sans-serif;
         }
 
-        /* TEXT COLORS FIX */
+        /* --- TEXT VISIBILITY FIX --- */
         h1, h2, h3, h4, h5, .modal-title, .form-select, .form-label, .btn, td, th {
             color: white !important;
         }
         .text-muted { color: #94a3b8 !important; }
-        
+        .text-success { color: var(--neon-green) !important; }
+        .text-danger { color: var(--neon-red) !important; }
+        .text-info { color: var(--neon-blue) !important; }
+        .text-warning { color: var(--neon-gold) !important; }
+
         /* FONT PIXEL */
         .pixel-font, .rank-number, .modal-title, .btn-versus, table th, .badge-archetype {
             font-family: 'VT323', monospace;
@@ -45,7 +49,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
-        /* HEADER & TICKER */
+        /* TICKER */
         .ticker-wrap {
             background: #000;
             border-bottom: 2px solid var(--neon-blue);
@@ -53,7 +57,7 @@
             padding: 8px 0; position: sticky; top: 0; z-index: 100;
         }
         .ticker {
-            display: inline-block; animation: marquee 30s linear infinite;
+            display: inline-block; animation: marquee 35s linear infinite;
             color: var(--neon-green); font-family: 'VT323'; font-size: 1.4rem;
         }
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
@@ -219,20 +223,22 @@
                         </tbody>
                     </table>
 
-                    <h4 class="pixel-font text-info mt-4 mb-3">2. CÁC CHỈ SỐ</h4>
+                    <h4 class="pixel-font text-info mt-4 mb-3">2. CHỈ SỐ RADAR (BIỂU ĐỒ MẠNG NHỆN)</h4>
                     <ul class="list-group list-group-flush bg-transparent">
                         <li class="list-group-item bg-transparent text-white">
-                            <b class="text-success">EXP (Kinh nghiệm):</b> Tổng điểm thắng thua tích lũy từ đầu mùa.
+                            <b class="text-success"><i class="fas fa-fist-raised"></i> SÁT THƯƠNG:</b> Tính dựa trên ván thắng to nhất (Max Score). Chỉ số này cao nghĩa là có khả năng "One Hit" đối thủ.
                         </li>
                         <li class="list-group-item bg-transparent text-white">
-                            <b class="text-success">Win Rate:</b> Tỷ lệ số ván thắng (Điểm > 0) trên tổng số ván chơi.
+                            <b class="text-success"><i class="fas fa-shield-alt"></i> ĐỘ LÌ:</b> Tính dựa trên số lượng ván đã chơi. Càng chơi nhiều càng lì đòn.
                         </li>
                         <li class="list-group-item bg-transparent text-white">
-                            <b class="text-success">Phong độ:</b> Biểu đồ 5 trận gần nhất. Cột Xanh (Thắng), Cột Đỏ (Thua).
+                            <b class="text-success"><i class="fas fa-dice"></i> MAY MẮN:</b> Chính là Tỷ lệ thắng (Win Rate).
                         </li>
                         <li class="list-group-item bg-transparent text-white">
-                            <b class="text-success">Thanh Huyết Áp:</b> 
-                            Đo độ "liều". Bên trái (An toàn) = Đánh nhỏ, thắng thua ít. Bên phải (Khô máu) = Đánh lớn, một ăn cả hai ngã.
+                            <b class="text-success"><i class="fas fa-balance-scale"></i> ỔN ĐỊNH:</b> Dựa trên độ lệch điểm số. Điểm số ít trồi sụt (ví dụ toàn +5, -5) thì ổn định cao. Thắng +50 rồi thua -50 thì ổn định thấp.
+                        </li>
+                        <li class="list-group-item bg-transparent text-white">
+                            <b class="text-success"><i class="fas fa-chart-line"></i> PHONG ĐỘ:</b> Tỷ lệ thắng trong 5 trận gần nhất.
                         </li>
                     </ul>
                 </div>
@@ -303,7 +309,7 @@
                             </div>
 
                             <h5 class="pixel-font text-info border-bottom border-secondary pb-1 mb-2">
-                                <i class="fas fa-calendar-alt"></i> Lịch Sử (60 Ngày Tính Từ Hôm Nay)
+                                <i class="fas fa-calendar-alt"></i> Lịch Sử (60 Ngày Gần Nhất)
                             </h5>
                             <div id="modalHeatmap" class="heatmap-grid"></div>
                             <div class="d-flex justify-content-between mt-1 small text-muted">
@@ -367,6 +373,7 @@
         let matches = {};
         let globalAvgStdDev = 0;
         let radarChartInstance = null;
+        let latestDateInSheet = new Date(2000, 0, 1); // Default old date
 
         document.addEventListener("DOMContentLoaded", () => {
             fetchData();
@@ -385,38 +392,59 @@
             });
         }
 
+        // Helper: "1/5/2026 15:20" -> Date Object
+        function parseDate(dateStr) {
+            if(!dateStr) return null;
+            const dateOnly = dateStr.split(' ')[0]; // "1/5/2026"
+            const parts = dateOnly.split('/');
+            // parts[0]=d, parts[1]=m, parts[2]=y
+            if(parts.length < 3) return null;
+            return new Date(parts[2], parts[1]-1, parts[0]);
+        }
+
+        // Helper: "1/5/2026" -> "1/5/2026" (Normalized key)
+        function getDateKey(dateObj) {
+            return `${dateObj.getDate()}/${dateObj.getMonth()+1}/${dateObj.getFullYear()}`;
+        }
+
         function processData(data) {
-            players = {}; matches = {};
+            players = {}; matches = {}; latestDateInSheet = new Date(2000, 0, 1);
 
             data.forEach(row => {
                 if (!row.Name || !row.Core || !row.Date) return;
 
                 const name = row.Name.trim().charAt(0).toUpperCase() + row.Name.trim().slice(1).toLowerCase();
                 const score = parseInt(row.Core);
-                const datePart = row.Date.split(' ')[0]; // format d/m/yyyy
-                const matchId = `${row.Date}_${row.Sheet}`;
-
-                if (!players[name]) {
-                    players[name] = {
-                        name: name, totalScore: 0, matchCount: 0, wins: 0, losses: 0,
-                        scores: [], dates: {}, matches: [],
-                        ledger: {}, teammates: {}
-                    };
-                }
-                if (!matches[matchId]) matches[matchId] = { id: matchId, players: [], scores: {} };
-
-                players[name].totalScore += score;
-                players[name].matchCount++;
-                players[name].scores.push(score);
-                if (score > 0) players[name].wins++; else players[name].losses++;
+                const dObj = parseDate(row.Date);
                 
-                // Heatmap Data
-                if (!players[name].dates[datePart]) players[name].dates[datePart] = 0;
-                players[name].dates[datePart] += score;
+                if(dObj) {
+                    if(dObj > latestDateInSheet) latestDateInSheet = dObj;
+                    const dateKey = getDateKey(dObj);
+                    
+                    // Match ID logic
+                    const matchId = `${row.Date}_${row.Sheet}`;
 
-                players[name].matches.push(matchId);
-                matches[matchId].players.push(name);
-                matches[matchId].scores[name] = score;
+                    if (!players[name]) {
+                        players[name] = {
+                            name: name, totalScore: 0, matchCount: 0, wins: 0, losses: 0,
+                            scores: [], dates: {}, matches: [],
+                            ledger: {}, teammates: {}
+                        };
+                    }
+                    if (!matches[matchId]) matches[matchId] = { id: matchId, players: [], scores: {} };
+
+                    players[name].totalScore += score;
+                    players[name].matchCount++;
+                    players[name].scores.push(score);
+                    if (score > 0) players[name].wins++; else players[name].losses++;
+                    
+                    if (!players[name].dates[dateKey]) players[name].dates[dateKey] = 0;
+                    players[name].dates[dateKey] += score;
+
+                    players[name].matches.push(matchId);
+                    matches[matchId].players.push(name);
+                    matches[matchId].scores[name] = score;
+                }
             });
 
             calcAdvancedStats();
@@ -501,10 +529,23 @@
             if(arr.length === 0) return;
             const top = arr.reduce((a,b)=>a.totalScore>b.totalScore?a:b);
             const bot = arr.reduce((a,b)=>a.totalScore<b.totalScore?a:b);
+            
+            // Tìm kỷ lục One Hit
+            let oneHitName = "", oneHitScore = 0;
+            arr.forEach(p => {
+                const maxS = Math.max(...p.scores);
+                if(maxS > oneHitScore) { oneHitScore = maxS; oneHitName = p.name; }
+            });
+
+            // Tìm người chơi nhiều nhất
+            const hardWorker = arr.reduce((a,b)=>a.matchCount>b.matchCount?a:b);
+
             const msgs = [
-                `👑 KING: ${top.name} (${top.totalScore})`,
-                `💀 BÁO THỦ: ${bot.name} (${bot.totalScore})`,
-                `📅 Cập nhật dữ liệu từ Google Sheet`
+                `👑 TOP 1 SERVER: ${top.name} (${top.totalScore})`,
+                `💀 ĐÁY XÃ HỘI: ${bot.name} (${bot.totalScore})`,
+                `🔥 KỶ LỤC ONE-HIT: ${oneHitName} (+${oneHitScore} điểm)`,
+                `🚜 NÔNG DÂN CHĂM CHỈ: ${hardWorker.name} (${hardWorker.matchCount} trận)`,
+                `📅 CẬP NHẬT ĐẾN NGÀY: ${getDateKey(latestDateInSheet)}`
             ];
             document.getElementById('liveTicker').innerText = msgs.join("  +++  ");
         }
@@ -544,7 +585,6 @@
                 tr.className = rowClass; tr.style.cursor = 'pointer';
                 tr.onclick = () => openPlayerModal(p.name);
 
-                // REPLACED TIME BADGE WITH ARCHETYPE ICON
                 tr.innerHTML = `
                     <td class="text-center" data-label="Rank"><span class="rank-number">${rankDisplay}</span></td>
                     <td data-label="Thành viên">
@@ -580,18 +620,18 @@
             const volPct = Math.min(100, (p.stdDev / (globalAvgStdDev * 2)) * 100);
             document.getElementById('meterCursor').style.left = `${volPct}%`;
 
-            // --- FIXED HEATMAP: USE TODAY AS ANCHOR ---
+            // --- FIXED HEATMAP LOGIC (ANCHOR TO LATEST DATA) ---
             const hm = document.getElementById('modalHeatmap');
             hm.innerHTML = '';
             
-            const today = new Date(); // Lấy ngày hiện tại thực tế
+            // Use latestDateInSheet as the anchor, not new Date()
+            const anchorDate = new Date(latestDateInSheet);
             
             for (let i = 59; i >= 0; i--) {
-                const d = new Date();
-                d.setDate(today.getDate() - i);
+                const d = new Date(anchorDate);
+                d.setDate(anchorDate.getDate() - i);
                 
-                // Format d/m/yyyy manually to avoid locale issues
-                const dateKey = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+                const dateKey = getDateKey(d);
                 const score = p.dates[dateKey];
                 
                 const cell = document.createElement('div');
