@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sát Phạt Hội - Battle Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #e2e8f0;
+            --neon-green: #39ff14;
+            --neon-red: #ff073a;
+            --neon-blue: #00f3ff;
+            --neon-gold: #ffd700;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        h1, h2, h3, .pixel-font {
+            font-family: 'Press Start 2P', cursive;
+            text-transform: uppercase;
+        }
+
+        /* Live Ticker */
+        .ticker-wrap {
+            width: 100%;
+            background-color: #000;
+            overflow: hidden;
+            border-bottom: 2px solid var(--neon-blue);
+            white-space: nowrap;
+            padding: 10px 0;
+        }
+        .ticker {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+            color: var(--neon-green);
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Cards */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid #334155;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Leaderboard Table */
+        .table-dark {
+            --bs-table-bg: transparent;
+            color: var(--text-main);
+        }
+        .rank-1 { color: var(--neon-gold); text-shadow: 0 0 10px var(--neon-gold); }
+        .rank-2 { color: #c0c0c0; }
+        .rank-3 { color: #cd7f32; }
+
+        /* Badges */
+        .badge-class {
+            font-size: 0.7em;
+            margin-left: 5px;
+            padding: 3px 6px;
+            border-radius: 4px;
+        }
+        .class-assassin { background-color: rgba(255, 7, 58, 0.2); color: var(--neon-red); border: 1px solid var(--neon-red); }
+        .class-tanker { background-color: rgba(0, 243, 255, 0.2); color: var(--neon-blue); border: 1px solid var(--neon-blue); }
+        .class-support { background-color: rgba(57, 255, 20, 0.2); color: var(--neon-green); border: 1px solid var(--neon-green); }
+        .class-noob { background-color: #475569; color: #94a3b8; border: 1px solid #94a3b8; }
+
+        /* Sparkline & EXP Bar */
+        .exp-bar-container {
+            width: 100px;
+            height: 4px;
+            background: #334155;
+            border-radius: 2px;
+            margin-top: 5px;
+        }
+        .exp-bar-fill {
+            height: 100%;
+            background: var(--neon-blue);
+            border-radius: 2px;
+        }
+        .sparkline {
+            width: 100px;
+            height: 30px;
+        }
+
+        /* Heatmap Modal */
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 5px;
+        }
+        .heatmap-cell {
+            width: 100%;
+            padding-top: 100%; /* Square aspect ratio */
+            position: relative;
+            border-radius: 4px;
+            background-color: #334155;
+            cursor: pointer;
+        }
+        .heatmap-cell:hover { transform: scale(1.1); transition: 0.2s; border: 1px solid white; }
+        .heatmap-tooltip {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; color: transparent;
+        }
+        
+        /* Loading */
+        #loading {
+            position: fixed; top:0; left:0; right:0; bottom:0;
+            background: var(--bg-dark); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading">
+        <h2 class="pixel-font" style="color: var(--neon-green);">LOADING DATA...</h2>
+        <div class="spinner-border text-info" role="status"></div>
+    </div>
+
+    <div class="ticker-wrap">
+        <div class="ticker" id="liveTicker">Waiting for data stream...</div>
+    </div>
+
+    <div class="container-fluid p-4">
+        <div class="text-center mb-5">
+            <h1 class="display-4 pixel-font text-white mb-3">
+                <i class="fas fa-gamepad text-info"></i> BATTLE REPORT
+            </h1>
+            <p class="text-muted">Thống kê điểm số realtime - Ai là trùm, ai là "ATM"?</p>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-12 col-lg-8 mx-auto">
+                <div class="glass-card p-4">
+                    <h5 class="pixel-font mb-4 text-center" style="color: var(--neon-gold);">
+                        <i class="fas fa-crosshairs"></i> The Quadrant (Phân loại)
+                    </h5>
+                    <canvas id="quadrantChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card p-4">
+            <h5 class="pixel-font mb-4" style="color: var(--neon-green);">
+                <i class="fas fa-trophy"></i> LEADERBOARD
+            </h5>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle">
+                    <thead>
+                        <tr class="text-uppercase text-muted" style="font-size: 0.8rem;">
+                            <th>Rank</th>
+                            <th>Player</th>
+                            <th class="text-center">Phong độ (5 trận gần nhất)</th>
+                            <th class="text-center">Matches</th>
+                            <th class="text-center">Win Rate</th>
+                            <th class="text-end">Total EXP (Score)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="playerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content glass-card" style="background: #1e293b; color: white;">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title pixel-font" id="modalPlayerName">Player Name</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center border-end border-secondary">
+                            <div class="mb-4">
+                                <h1 class="display-1" id="modalRank">#1</h1>
+                                <span class="badge bg-warning text-dark" id="modalClass">CLASS</span>
+                            </div>
+                            <ul class="list-group list-group-flush bg-transparent text-start">
+                                <li class="list-group-item bg-transparent text-white d-flex justify-content-between">
+                                    <span><i class="fas fa-skull text-danger"></i> Nemesis (Kỵ giơ):</span>
+                                    <strong id="modalNemesis">---</strong>
+                                </li>
+                                <li class="list-group-item bg-transparent text-white d-flex justify-content-between">
+                                    <span><i class="fas fa-bolt text-warning"></i> Max Score:</span>
+                                    <strong id="modalMax">0</strong>
+                                </li>
+                                <li class="list-group-item bg-transparent text-white d-flex justify-content-between">
+                                    <span><i class="fas fa-level-down-alt text-info"></i> Min Score:</span>
+                                    <strong id="modalMin">0</strong>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-8">
+                            <h6 class="text-uppercase text-muted mb-3">Lịch sử chinh chiến (Heatmap)</h6>
+                            <div id="modalHeatmap" class="heatmap-grid"></div>
+                            <div class="d-flex justify-content-between mt-2 text-muted" style="font-size: 0.7rem;">
+                                <span>Thua sấp mặt (Đỏ)</span>
+                                <span>Thắng đậm (Xanh)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // --- CONFIGURATION ---
+        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRvJLnrZU9iHP1XzU8JMQD3C2xPzkKrHMIzWsvpyVDmayFK_dd5-xwnNtBshPtLYauwd8GnaK5gS4FH/pub?gid=1796395162&single=true&output=csv";
+        
+        // --- GLOBAL DATA ---
+        let rawData = [];
+        let players = {};
+        let matches = {};
+        
+        // --- INIT ---
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchData();
+        });
+
+        function fetchData() {
+            Papa.parse(CSV_URL, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    rawData = results.data;
+                    processData(rawData);
+                    renderUI();
+                    document.getElementById('loading').style.display = 'none';
+                },
+                error: function(err) {
+                    alert("Lỗi tải dữ liệu: " + err);
+                }
+            });
+        }
+
+        // --- DATA PROCESSING LOGIC ---
+        function processData(data) {
+            // Reset
+            players = {};
+            matches = {};
+
+            data.forEach(row => {
+                if (!row.Name || !row.Core || !row.Date) return;
+
+                // 1. Normalize
+                const name = row.Name.trim().charAt(0).toUpperCase() + row.Name.trim().slice(1).toLowerCase();
+                const score = parseInt(row.Core);
+                const dateRaw = row.Date.split(' ')[0]; // Just date for heatmap
+                
+                // Match ID Logic: Date + Time + Sheet
+                // Giả sử row.Date format là "1/5/2026 15:20:08"
+                const matchId = `${row.Date}_${row.Sheet}`;
+
+                // 2. Init Player if not exists
+                if (!players[name]) {
+                    players[name] = {
+                        name: name,
+                        totalScore: 0,
+                        matchCount: 0,
+                        wins: 0,
+                        losses: 0, // Score < 0
+                        scores: [], // History for sparkline
+                        matchHistory: [], // Detailed objects
+                        dates: {}, // For heatmap
+                        nemesisCounts: {} // To track who beats them
+                    };
+                }
+
+                // 3. Init Match if not exists
+                if (!matches[matchId]) {
+                    matches[matchId] = {
+                        id: matchId,
+                        date: dateRaw,
+                        players: [],
+                        scores: {}
+                    };
+                }
+
+                // 4. Populate Data
+                players[name].totalScore += score;
+                players[name].matchCount += 1;
+                players[name].scores.push(score);
+                if (score > 0) players[name].wins++;
+                if (score < 0) players[name].losses++;
+                
+                // Heatmap data
+                if (!players[name].dates[dateRaw]) players[name].dates[dateRaw] = 0;
+                players[name].dates[dateRaw] += score;
+
+                // Match data
+                matches[matchId].players.push(name);
+                matches[matchId].scores[name] = score;
+            });
+
+            // 5. Advanced Calculations (Classes, Nemesis)
+            calculateAdvancedStats();
+        }
+
+        function calculateAdvancedStats() {
+            Object.values(matches).forEach(match => {
+                // Find winners and losers in this match
+                const participants = match.players;
+                const winners = participants.filter(p => match.scores[p] > 0);
+                const losers = participants.filter(p => match.scores[p] < 0);
+
+                losers.forEach(loserName => {
+                    winners.forEach(winnerName => {
+                        if (!players[loserName].nemesisCounts[winnerName]) {
+                            players[loserName].nemesisCounts[winnerName] = 0;
+                        }
+                        players[loserName].nemesisCounts[winnerName]++;
+                    });
+                });
+            });
+
+            // Calculate Classes based on StdDev & Avg Score
+            Object.values(players).forEach(p => {
+                const avg = p.totalScore / p.matchCount;
+                
+                // Calculate Standard Deviation
+                const mean = p.scores.reduce((a, b) => a + b, 0) / p.scores.length;
+                const variance = p.scores.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / p.scores.length;
+                const stdDev = Math.sqrt(variance);
+
+                p.stdDev = stdDev;
+                p.avgScore = avg;
+
+                // Assign Class
+                if (stdDev > 15 && avg > 5) p.class = "Assassin (Sát thủ)";
+                else if (stdDev > 15 && avg < 0) p.class = "Gambler (Con bạc)";
+                else if (stdDev < 10 && avg < 0) p.class = "Feeder (Hiến máu)";
+                else if (stdDev < 10 && avg > 0) p.class = "Support (Hỗ trợ)";
+                else p.class = "Civilian (Dân thường)";
+                
+                // Find Nemesis (Max count)
+                let maxNemesis = "None";
+                let maxCount = 0;
+                for (const [enemy, count] of Object.entries(p.nemesisCounts)) {
+                    if (count > maxCount) {
+                        maxCount = count;
+                        maxNemesis = enemy;
+                    }
+                }
+                p.nemesis = maxNemesis;
+            });
+        }
+
+        // --- UI RENDERING ---
+        function renderUI() {
+            renderTicker();
+            renderQuadrant();
+            renderLeaderboard();
+        }
+
+        function renderTicker() {
+            const playerList = Object.values(players);
+            const topScore = playerList.reduce((prev, current) => (prev.totalScore > current.totalScore) ? prev : current);
+            const mostMatches = playerList.reduce((prev, current) => (prev.matchCount > current.matchCount) ? prev : current);
+            
+            const messages = [
+                `👑 TOP SERVER: ${topScore.name} (${topScore.totalScore} EXP)`,
+                `🚜 NÔNG DÂN CHĂM CHỈ: ${mostMatches.name} (${mostMatches.matchCount} trận)`,
+                `📢 BẢN TIN: Hệ thống vừa cập nhật dữ liệu mới nhất!`,
+                `⚠️ CẢNH BÁO: Các "ATM di động" hãy cẩn thận!`
+            ];
+            
+            document.getElementById('liveTicker').innerHTML = messages.join(" &nbsp;&nbsp; | &nbsp;&nbsp; ");
+        }
+
+        function renderQuadrant() {
+            const ctx = document.getElementById('quadrantChart').getContext('2d');
+            const dataPoints = Object.values(players).map(p => ({
+                x: p.matchCount,
+                y: p.avgScore,
+                name: p.name,
+                class: p.class
+            }));
+
+            new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Player Distribution',
+                        data: dataPoints,
+                        backgroundColor: (ctx) => {
+                            const val = ctx.raw?.y;
+                            return val > 0 ? '#39ff14' : '#ff073a';
+                        },
+                        pointRadius: 6,
+                        pointHoverRadius: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.raw.name} (${context.raw.class})`;
+                                }
+                            }
+                        },
+                        annotation: {
+                            // Can add lines to divide quadrants later
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            title: { display: true, text: 'Số Trận (Kinh Nghiệm)', color: '#94a3b8' },
+                            grid: { color: '#334155' },
+                            ticks: { color: '#e2e8f0' }
+                        },
+                        y: { 
+                            title: { display: true, text: 'Điểm Trung Bình (Kỹ Năng)', color: '#94a3b8' },
+                            grid: { color: '#334155' },
+                            ticks: { color: '#e2e8f0' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderLeaderboard() {
+            const tbody = document.getElementById('leaderboardBody');
+            const sortedPlayers = Object.values(players).sort((a, b) => b.totalScore - a.totalScore);
+            const maxMatches = Math.max(...sortedPlayers.map(p => p.matchCount));
+
+            tbody.innerHTML = '';
+
+            sortedPlayers.forEach((p, index) => {
+                const rank = index + 1;
+                let rankClass = '';
+                let icon = '';
+                
+                if (rank === 1) { rankClass = 'rank-1'; icon = '<i class="fas fa-crown"></i>'; }
+                else if (rank === 2) { rankClass = 'rank-2'; }
+                else if (rank === 3) { rankClass = 'rank-3'; }
+
+                // Determine Class Badge Color
+                let classColor = 'class-noob';
+                if (p.class.includes('Assassin')) classColor = 'class-assassin';
+                if (p.class.includes('Tanker')) classColor = 'class-tanker';
+                if (p.class.includes('Support')) classColor = 'class-support';
+
+                // Win Rate
+                const winRate = ((p.wins / p.matchCount) * 100).toFixed(0);
+                
+                // Sparkline Data (Last 5 matches)
+                const last5 = p.scores.slice(-5);
+                const sparklineId = `spark_${index}`;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="fw-bold ${rankClass}" style="font-family: 'Press Start 2P'; font-size: 1.2em;">${rank}</td>
+                    <td>
+                        <div class="d-flex align-items-center cursor-pointer" onclick="showPlayerDetail('${p.name}')" style="cursor: pointer;">
+                            <div>
+                                <strong class="fs-5">${icon} ${p.name}</strong>
+                                <span class="badge badge-class ${classColor}">${p.class}</span>
+                                <div class="exp-bar-container" title="Kinh nghiệm: ${p.matchCount} trận">
+                                    <div class="exp-bar-fill" style="width: ${(p.matchCount / maxMatches) * 100}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <canvas id="${sparklineId}" class="sparkline"></canvas>
+                    </td>
+                    <td class="text-center fw-bold">${p.matchCount}</td>
+                    <td class="text-center ${winRate > 50 ? 'text-success' : 'text-danger'}">${winRate}%</td>
+                    <td class="text-end fw-bold fs-4 ${p.totalScore > 0 ? 'text-success' : 'text-danger'}">
+                        ${p.totalScore > 0 ? '+' : ''}${p.totalScore}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+
+                // Draw Sparkline
+                drawSparkline(sparklineId, last5);
+            });
+        }
+
+        function drawSparkline(canvasId, data) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [1,2,3,4,5],
+                    datasets: [{
+                        data: data,
+                        borderColor: data[data.length-1] >= 0 ? '#39ff14' : '#ff073a',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false,
+                    plugins: { legend: {display: false}, tooltip: {enabled: false} },
+                    scales: { x: {display: false}, y: {display: false} }
+                }
+            });
+        }
+
+        function showPlayerDetail(name) {
+            const p = players[name];
+            document.getElementById('modalPlayerName').innerText = p.name.toUpperCase();
+            document.getElementById('modalRank').innerText = `#${Object.values(players).sort((a,b)=>b.totalScore-a.totalScore).findIndex(x=>x.name===name)+1}`;
+            document.getElementById('modalClass').innerText = p.class;
+            document.getElementById('modalNemesis').innerText = p.nemesis;
+            document.getElementById('modalMax').innerText = Math.max(...p.scores);
+            document.getElementById('modalMin').innerText = Math.min(...p.scores);
+            
+            // Heatmap Render
+            const heatmapContainer = document.getElementById('modalHeatmap');
+            heatmapContainer.innerHTML = '';
+            
+            // Generate last 30 days dummy or real dates
+            // For simplicity, we iterate object dates
+            const sortedDates = Object.keys(p.dates).sort((a,b) => new Date(a) - new Date(b));
+            
+            if (sortedDates.length === 0) {
+                heatmapContainer.innerHTML = '<p class="text-muted">Chưa có dữ liệu</p>';
+            } else {
+                sortedDates.forEach(date => {
+                    const score = p.dates[date];
+                    const div = document.createElement('div');
+                    div.className = 'heatmap-cell';
+                    
+                    // Color Logic
+                    if (score > 20) div.style.backgroundColor = 'var(--neon-green)';
+                    else if (score > 0) div.style.backgroundColor = '#15803d'; // Dark green
+                    else if (score === 0) div.style.backgroundColor = '#475569'; // Gray
+                    else if (score > -20) div.style.backgroundColor = '#991b1b'; // Dark red
+                    else div.style.backgroundColor = 'var(--neon-red)';
+
+                    // Tooltip
+                    div.innerHTML = `<div class="heatmap-tooltip" title="${date}: ${score} điểm"></div>`;
+                    heatmapContainer.appendChild(div);
+                });
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('playerModal'));
+            modal.show();
+        }
+    </script>
+</body>
+</html>
