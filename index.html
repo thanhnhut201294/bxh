@@ -57,7 +57,7 @@
             padding: 8px 0; position: sticky; top: 0; z-index: 100;
         }
         .ticker {
-            display: inline-block; animation: marquee 35s linear infinite;
+            display: inline-block; animation: marquee 40s linear infinite;
             color: var(--neon-green); font-family: 'VT323'; font-size: 1.4rem;
         }
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
@@ -164,7 +164,7 @@
             </div>
             <div>
                 <button class="btn btn-guide pixel-font rounded-pill" onclick="openGuideModal()">
-                    <i class="fas fa-question-circle"></i> CHÚ THÍCH
+                    <i class="fas fa-question-circle"></i> HƯỚNG DẪN
                 </button>
                 <button class="btn btn-versus pixel-font rounded-pill" onclick="openVersusModal()">
                     <i class="fas fa-fist-raised"></i> SO KÈO 1VS1
@@ -206,11 +206,11 @@
                         <tbody>
                             <tr>
                                 <td width="150"><span class="badge-archetype arch-shark">🦈 SHARK</span></td>
-                                <td><b>CÁ MẬP:</b> Thắng nhiều + Chơi liều (Biên độ điểm lớn). Kẻ đi săn đáng sợ.</td>
+                                <td><b>CÁ MẬP:</b> Thắng nhiều + Chơi liều (Biên độ điểm lớn).</td>
                             </tr>
                             <tr>
                                 <td><span class="badge-archetype arch-turtle">🐢 TURTLE</span></td>
-                                <td><b>RÙA:</b> Thắng/Hòa + Chơi an toàn. Chậm mà chắc, rất khó bị lỗ.</td>
+                                <td><b>RÙA:</b> Thắng/Hòa + Chơi an toàn. Chậm mà chắc.</td>
                             </tr>
                             <tr>
                                 <td><span class="badge-archetype arch-gambler">🎰 GAMBLER</span></td>
@@ -218,27 +218,37 @@
                             </tr>
                             <tr>
                                 <td><span class="badge-archetype arch-atm">💸 ATM</span></td>
-                                <td><b>CÂY ATM:</b> Thua nhiều + Chơi an toàn. Nhà tài trợ chính cho anh em.</td>
+                                <td><b>CÂY ATM:</b> Thua nhiều + Chơi an toàn. Nhà tài trợ chính.</td>
                             </tr>
                         </tbody>
                     </table>
 
-                    <h4 class="pixel-font text-info mt-4 mb-3">2. CHỈ SỐ RADAR (BIỂU ĐỒ MẠNG NHỆN)</h4>
+                    <h4 class="pixel-font text-info mt-4 mb-3">2. CHỈ SỐ RADAR</h4>
                     <ul class="list-group list-group-flush bg-transparent">
                         <li class="list-group-item bg-transparent text-white">
-                            <b class="text-success"><i class="fas fa-fist-raised"></i> SÁT THƯƠNG:</b> Tính dựa trên ván thắng to nhất (Max Score). Chỉ số này cao nghĩa là có khả năng "One Hit" đối thủ.
+                            <b class="text-success"><i class="fas fa-fist-raised"></i> SÁT THƯƠNG:</b> Tính dựa trên Max Score (Ván thắng to nhất).
                         </li>
                         <li class="list-group-item bg-transparent text-white">
-                            <b class="text-success"><i class="fas fa-shield-alt"></i> ĐỘ LÌ:</b> Tính dựa trên số lượng ván đã chơi. Càng chơi nhiều càng lì đòn.
+                            <b class="text-success"><i class="fas fa-shield-alt"></i> ĐỘ LÌ:</b> Dựa trên tổng số trận đã chơi.
                         </li>
                         <li class="list-group-item bg-transparent text-white">
-                            <b class="text-success"><i class="fas fa-dice"></i> MAY MẮN:</b> Chính là Tỷ lệ thắng (Win Rate).
+                            <b class="text-success"><i class="fas fa-dice"></i> MAY MẮN:</b> Chính là Win Rate (Tỷ lệ thắng).
                         </li>
                         <li class="list-group-item bg-transparent text-white">
-                            <b class="text-success"><i class="fas fa-balance-scale"></i> ỔN ĐỊNH:</b> Dựa trên độ lệch điểm số. Điểm số ít trồi sụt (ví dụ toàn +5, -5) thì ổn định cao. Thắng +50 rồi thua -50 thì ổn định thấp.
+                            <b class="text-success"><i class="fas fa-balance-scale"></i> ỔN ĐỊNH:</b> Điểm số ít biến động (Độ lệch chuẩn thấp).
                         </li>
                         <li class="list-group-item bg-transparent text-white">
                             <b class="text-success"><i class="fas fa-chart-line"></i> PHONG ĐỘ:</b> Tỷ lệ thắng trong 5 trận gần nhất.
+                        </li>
+                    </ul>
+
+                    <h4 class="pixel-font text-danger mt-4 mb-3">3. QUAN HỆ XÃ HỘI</h4>
+                    <ul class="list-group list-group-flush bg-transparent">
+                        <li class="list-group-item bg-transparent text-white">
+                            <b class="text-warning">☠️ KHẮC TINH (Nemesis):</b> Người bào tiền của bạn nhiều nhất (Số dư nợ âm lớn nhất).
+                        </li>
+                        <li class="list-group-item bg-transparent text-white">
+                            <b class="text-info">🤝 HỢP CẠ (Synergy):</b> Đồng đội mà khi chơi cùng, tỷ lệ thắng của bạn cao nhất.
                         </li>
                     </ul>
                 </div>
@@ -373,7 +383,7 @@
         let matches = {};
         let globalAvgStdDev = 0;
         let radarChartInstance = null;
-        let latestDateInSheet = new Date(2000, 0, 1); // Default old date
+        let latestDateInSheet = new Date(2000, 0, 1);
 
         document.addEventListener("DOMContentLoaded", () => {
             fetchData();
@@ -392,14 +402,25 @@
             });
         }
 
-        // Helper: "1/5/2026 15:20" -> Date Object
+        // --- UPDATED DATE PARSER (M/D/YYYY FIX) ---
         function parseDate(dateStr) {
             if(!dateStr) return null;
-            const dateOnly = dateStr.split(' ')[0]; // "1/5/2026"
+            // Expected format: "1/28/2026 15:20" (M/D/YYYY HH:MM)
+            const dateOnly = dateStr.split(' ')[0]; // "1/28/2026"
             const parts = dateOnly.split('/');
-            // parts[0]=d, parts[1]=m, parts[2]=y
+            
+            // Handle specific case: m/d/yyyy
+            // parts[0]=month, parts[1]=day, parts[2]=year
             if(parts.length < 3) return null;
-            return new Date(parts[2], parts[1]-1, parts[0]);
+            
+            const month = parseInt(parts[0]);
+            const day = parseInt(parts[1]);
+            const year = parseInt(parts[2]);
+
+            // Basic validation to prevent year 2028 issues
+            // If month > 12, user might have used D/M/YYYY accidentally, but prompt says data is M/D/YYYY
+            // We trust the structure: M/D/YYYY
+            return new Date(year, month-1, day);
         }
 
         // Helper: "1/5/2026" -> "1/5/2026" (Normalized key)
@@ -418,10 +439,9 @@
                 const dObj = parseDate(row.Date);
                 
                 if(dObj) {
+                    // Update latest date for Heatmap anchor
                     if(dObj > latestDateInSheet) latestDateInSheet = dObj;
                     const dateKey = getDateKey(dObj);
-                    
-                    // Match ID logic
                     const matchId = `${row.Date}_${row.Sheet}`;
 
                     if (!players[name]) {
@@ -530,21 +550,25 @@
             const top = arr.reduce((a,b)=>a.totalScore>b.totalScore?a:b);
             const bot = arr.reduce((a,b)=>a.totalScore<b.totalScore?a:b);
             
-            // Tìm kỷ lục One Hit
+            // Tìm Max Loss (Ván thua đậm nhất)
+            let maxLossName = "", maxLossScore = 0;
+            arr.forEach(p => {
+                const minS = Math.min(...p.scores);
+                if(minS < maxLossScore) { maxLossScore = minS; maxLossName = p.name; }
+            });
+
+            // Tìm One Hit
             let oneHitName = "", oneHitScore = 0;
             arr.forEach(p => {
                 const maxS = Math.max(...p.scores);
                 if(maxS > oneHitScore) { oneHitScore = maxS; oneHitName = p.name; }
             });
 
-            // Tìm người chơi nhiều nhất
-            const hardWorker = arr.reduce((a,b)=>a.matchCount>b.matchCount?a:b);
-
             const msgs = [
                 `👑 TOP 1 SERVER: ${top.name} (${top.totalScore})`,
                 `💀 ĐÁY XÃ HỘI: ${bot.name} (${bot.totalScore})`,
-                `🔥 KỶ LỤC ONE-HIT: ${oneHitName} (+${oneHitScore} điểm)`,
-                `🚜 NÔNG DÂN CHĂM CHỈ: ${hardWorker.name} (${hardWorker.matchCount} trận)`,
+                `🔥 ONE-HIT: ${oneHitName} (+${oneHitScore})`,
+                `🩸 VÁN THUA ĐẬM NHẤT: ${maxLossName} (${maxLossScore})`,
                 `📅 CẬP NHẬT ĐẾN NGÀY: ${getDateKey(latestDateInSheet)}`
             ];
             document.getElementById('liveTicker').innerText = msgs.join("  +++  ");
@@ -620,23 +644,19 @@
             const volPct = Math.min(100, (p.stdDev / (globalAvgStdDev * 2)) * 100);
             document.getElementById('meterCursor').style.left = `${volPct}%`;
 
-            // --- FIXED HEATMAP LOGIC (ANCHOR TO LATEST DATA) ---
+            // --- HEATMAP FIX ---
             const hm = document.getElementById('modalHeatmap');
             hm.innerHTML = '';
-            
-            // Use latestDateInSheet as the anchor, not new Date()
             const anchorDate = new Date(latestDateInSheet);
             
             for (let i = 59; i >= 0; i--) {
                 const d = new Date(anchorDate);
                 d.setDate(anchorDate.getDate() - i);
-                
                 const dateKey = getDateKey(d);
                 const score = p.dates[dateKey];
                 
                 const cell = document.createElement('div');
                 cell.className = 'heatmap-cell';
-                
                 if (score !== undefined) {
                     cell.setAttribute('data-title', `${dateKey}: ${score}`);
                     if (score > 0) cell.style.background = 'var(--neon-green)';
