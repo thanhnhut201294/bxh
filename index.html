@@ -109,7 +109,7 @@
         .row-feeder td { background: rgba(255, 7, 58, 0.05) !important; border-color: var(--neon-red) !important; }
         .row-feeder .rank-number { font-size: 1.8rem; color: var(--neon-red); }
 
-        /* SPONSOR CARDS (NEW) */
+        /* SPONSOR CARDS */
         .sponsor-card {
             background: rgba(15, 23, 42, 0.8);
             border: 2px solid #334155;
@@ -190,7 +190,7 @@
                 <h1 class="pixel-font display-4 mb-0" style="text-shadow: 3px 3px 0 var(--neon-blue); font-weight: bold;">
                     <i class="fas fa-bolt text-warning"></i> TÁI TẠO NĂNG LƯỢNG
                 </h1>
-                <p class="text-muted pixel-font fs-4 mb-0">Hệ thống báo cáo Sát Phạt Hội</p>
+                <p class="text-muted pixel-font fs-4 mb-0">TRUNG TÂM PHÂN PHỐI LẠI THU NHẬP & NHÂN PHẨM</p>
             </div>
             <div>
                 <button class="btn btn-guide pixel-font rounded-pill" onclick="openGuideModal()">
@@ -448,18 +448,13 @@
             if(!dateStr) return null;
             const dateOnly = dateStr.split(' ')[0]; 
             const parts = dateOnly.split('/');
-            
-            // Expected M/D/YYYY from Sheet
             if(parts.length < 3) return null;
-            
             const month = parseInt(parts[0]);
             const day = parseInt(parts[1]);
             const year = parseInt(parts[2]);
-
             return new Date(year, month-1, day);
         }
 
-        // Helper: Normalized key
         function getDateKey(dateObj) {
             return `${dateObj.getDate()}/${dateObj.getMonth()+1}/${dateObj.getFullYear()}`;
         }
@@ -615,21 +610,16 @@
             return '<span class="badge-archetype-small arch-atm" title="ATM">💸</span>';
         }
 
-        // --- NEW: RENDER SPONSOR BOARD ---
         function renderSponsors() {
             const container = document.getElementById('sponsorBoard');
             container.innerHTML = '';
             
-            // Sort lowest score first
             const sortedBottom = Object.values(players).sort((a,b) => a.totalScore - b.totalScore).slice(0, 3);
             
             sortedBottom.forEach((p, index) => {
                 let rankTitle = "", borderClass = "", icon = "", color = "";
-                // Top 1 âm -> Kim Cương
                 if(index === 0) { rankTitle="NHÀ TÀI TRỢ KIM CƯƠNG"; borderClass="sponsor-diamond"; icon="💎"; color="text-info"; }
-                // Top 2 âm -> Vàng
                 if(index === 1) { rankTitle="NHÀ TÀI TRỢ VÀNG"; borderClass="sponsor-gold"; icon="🥇"; color="text-warning"; }
-                // Top 3 âm -> Bạc
                 if(index === 2) { rankTitle="NHÀ TÀI TRỢ BẠC"; borderClass="sponsor-silver"; icon="🥈"; color="text-secondary"; }
 
                 const col = document.createElement('div');
