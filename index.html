@@ -24,13 +24,11 @@
             background-color: var(--bg-dark);
             color: var(--text-main);
             font-family: 'Roboto', sans-serif;
-            padding-bottom: 50px;
+            padding-bottom: 30px;
         }
 
-        /* --- TEXT VISIBILITY FIX --- */
-        h1, h2, h3, h4, h5, .modal-title, .form-select, .form-label, .btn, td, th {
-            color: white !important;
-        }
+        /* --- TEXT COLORS --- */
+        h1, h2, h3, h4, h5, .modal-title, .form-select, .form-label, .btn, td, th { color: white !important; }
         .text-muted { color: #94a3b8 !important; }
         .text-success { color: var(--neon-green) !important; }
         .text-danger { color: var(--neon-red) !important; }
@@ -44,131 +42,145 @@
             text-transform: uppercase;
         }
 
+        /* --- COMPACT UI: GLASS CARD --- */
         .glass-card {
             background: rgba(30, 41, 59, 0.95);
             border: 1px solid #334155;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border-radius: 8px; /* Giảm bo góc cho gọn */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            padding: 15px !important; /* Giảm padding */
         }
 
         /* TICKER */
         .ticker-wrap {
-            background: #000;
-            border-bottom: 2px solid var(--neon-blue);
-            white-space: nowrap; overflow: hidden;
-            padding: 8px 0; position: sticky; top: 0; z-index: 100;
+            background: #000; border-bottom: 2px solid var(--neon-blue);
+            white-space: nowrap; overflow: hidden; padding: 5px 0; position: sticky; top: 0; z-index: 100;
         }
         .ticker {
             display: inline-block; animation: marquee 40s linear infinite;
-            color: var(--neon-green); font-family: 'VT323'; font-size: 1.4rem;
+            color: var(--neon-green); font-family: 'VT323'; font-size: 1.2rem;
         }
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
+        /* BUTTONS */
         .btn-versus {
-            background: linear-gradient(45deg, #ff073a, #bc13fe);
-            border: none; color: white; font-size: 1.2rem; padding: 5px 20px;
-            box-shadow: 0 0 10px rgba(255, 7, 58, 0.5);
+            background: linear-gradient(45deg, #ff073a, #bc13fe); border: none; color: white;
+            font-size: 1.1rem; padding: 4px 15px; box-shadow: 0 0 10px rgba(255, 7, 58, 0.5);
         }
-
         .btn-guide {
             background: #334155; border: 1px solid #94a3b8; color: #cbd5e1;
-            font-size: 1rem; padding: 5px 15px; margin-right: 10px;
+            font-size: 1rem; padding: 4px 12px; margin-right: 8px;
         }
 
-        /* TABLE */
-        .table-custom { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-        .table-custom th { color: #94a3b8 !important; padding: 10px; border-bottom: 1px solid #334155; text-align: center; font-size: 1.3rem; }
+        /* --- COMPACT TABLE --- */
+        .table-custom { width: 100%; border-collapse: separate; border-spacing: 0 4px; /* Giảm khoảng cách dòng */ }
+        
+        .table-custom th {
+            color: #94a3b8 !important; padding: 8px; border-bottom: 1px solid #334155;
+            text-align: center; font-size: 1.2rem; cursor: pointer; user-select: none;
+        }
+        .table-custom th:hover { color: var(--neon-blue) !important; }
+        
         .table-custom td {
-            background: #1e293b; padding: 10px; vertical-align: middle;
+            background: #1e293b; padding: 8px 12px; vertical-align: middle; /* Compact padding */
             border-top: 1px solid #334155; border-bottom: 1px solid #334155;
         }
-        .table-custom tr td:first-child { border-left: 1px solid #334155; border-radius: 8px 0 0 8px; }
-        .table-custom tr td:last-child { border-right: 1px solid #334155; border-radius: 0 8px 8px 0; }
+        .table-custom tr td:first-child { border-left: 1px solid #334155; border-radius: 6px 0 0 6px; }
+        .table-custom tr td:last-child { border-right: 1px solid #334155; border-radius: 0 6px 6px 0; }
+
+        /* SORT ICON */
+        .sort-icon { font-size: 0.8em; margin-left: 5px; opacity: 0.5; }
+        .th-active .sort-icon { opacity: 1; color: var(--neon-gold); }
 
         /* BAR CHART MINI */
-        .bar-chart-mini {
-            display: flex; align-items: center; justify-content: center;
-            height: 40px; gap: 4px;
-        }
-        .bar-column { width: 6px; border-radius: 1px; position: relative; }
+        .bar-chart-mini { display: flex; align-items: center; justify-content: center; height: 30px; gap: 3px; }
+        .bar-column { width: 5px; border-radius: 1px; position: relative; }
         .bar-pos { background-color: var(--neon-green); }
         .bar-neg { background-color: var(--neon-red); }
 
-        /* MOBILE CARD VIEW */
+        /* --- MOBILE OPTIMIZATION: DENSE LIST VIEW --- */
         @media (max-width: 768px) {
+            /* Ẩn Header bảng trên mobile */
             .table-custom thead { display: none; }
-            .table-custom tr { display: block; margin-bottom: 15px; }
-            .table-custom td { display: flex; justify-content: space-between; text-align: right; padding: 10px 15px; }
-            .table-custom td:first-child { justify-content: center; background: #0f172a; }
-            .table-custom td::before { content: attr(data-label); color: #94a3b8; font-family: 'VT323'; margin-right: 10px; }
+            
+            /* Dòng siêu gọn */
+            .table-custom tr { 
+                display: flex; align-items: center; justify-content: space-between;
+                background: #1e293b; margin-bottom: 5px; border-radius: 6px; border: 1px solid #334155;
+                padding: 5px 10px; /* Padding nhỏ */
+            }
+
+            /* Reset style td mặc định */
+            .table-custom td {
+                background: transparent !important; border: none !important; padding: 0 !important;
+                border-radius: 0 !important;
+            }
+
+            /* Cột Hạng */
+            .col-rank { width: 35px; text-align: center; font-size: 1.2rem; }
+            /* Cột Tên (Chiếm phần lớn) */
+            .col-name { flex-grow: 1; padding-left: 10px !important; text-align: left; }
+            .col-name div.fw-bold { font-size: 1rem; } /* Font tên vừa phải */
+            
+            /* Cột Điểm (Bên phải cùng) */
+            .col-exp { width: 80px; text-align: right; font-size: 1.3rem !important; }
+
+            /* Ẩn các cột không quan trọng trên mobile */
+            .col-matches, .col-winrate, .col-form { display: none !important; }
+            
+            /* Tiêu đề trang nhỏ lại chút */
+            h1.display-4 { font-size: 2.2rem; }
+            .fs-4 { font-size: 1rem !important; }
         }
 
         /* TIERS */
-        .row-god td { background: rgba(255, 215, 0, 0.05) !important; border-color: var(--neon-gold) !important; }
-        .row-god .rank-number { font-size: 2rem; color: var(--neon-gold); text-shadow: 0 0 10px var(--neon-gold); }
-        .row-feeder td { background: rgba(255, 7, 58, 0.05) !important; border-color: var(--neon-red) !important; }
-        .row-feeder .rank-number { font-size: 1.8rem; color: var(--neon-red); }
-
-        /* SPONSOR CARDS */
-        .sponsor-card {
-            background: rgba(15, 23, 42, 0.8);
-            border: 2px solid #334155;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.3s ease;
-            height: 100%;
-        }
-        .sponsor-card:hover { transform: translateY(-5px); }
+        .row-god { background: rgba(255, 215, 0, 0.05) !important; border: 1px solid rgba(255, 215, 0, 0.3) !important; }
+        .row-god .rank-number { font-size: 1.5rem; color: var(--neon-gold); text-shadow: 0 0 5px var(--neon-gold); }
         
-        .sponsor-diamond { 
-            border-color: var(--neon-blue); 
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.15); 
-            background: linear-gradient(180deg, rgba(0,243,255,0.05) 0%, rgba(15,23,42,0.9) 100%);
+        .row-feeder { background: rgba(255, 7, 58, 0.05) !important; border: 1px solid rgba(255, 7, 58, 0.3) !important; }
+        .row-feeder .rank-number { font-size: 1.4rem; color: var(--neon-red); }
+
+        /* SPONSOR CARDS - COMPACT */
+        .sponsor-card {
+            background: rgba(15, 23, 42, 0.8); border: 1px solid #334155; border-radius: 10px;
+            padding: 15px; text-align: center; transition: transform 0.2s ease; height: 100%;
         }
-        .sponsor-gold { 
-            border-color: var(--neon-gold); 
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
-            background: linear-gradient(180deg, rgba(255,215,0,0.05) 0%, rgba(15,23,42,0.9) 100%);
-        }
-        .sponsor-silver { 
-            border-color: #cbd5e1; 
-            box-shadow: 0 0 20px rgba(203, 213, 225, 0.15);
-            background: linear-gradient(180deg, rgba(203,213,225,0.05) 0%, rgba(15,23,42,0.9) 100%);
-        }
+        .sponsor-card:active { transform: scale(0.98); }
+        
+        .sponsor-diamond { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 243, 255, 0.1); }
+        .sponsor-gold { border-color: var(--neon-gold); box-shadow: 0 0 10px rgba(255, 215, 0, 0.1); }
+        .sponsor-silver { border-color: #cbd5e1; box-shadow: 0 0 10px rgba(203, 213, 225, 0.1); }
 
         /* BADGES */
-        .badge-archetype { font-size: 1.2rem; padding: 4px 8px; border-radius: 4px; display: inline-block; margin-top: 5px; }
-        .badge-archetype-small { font-size: 1rem; padding: 2px 6px; border-radius: 4px; margin-left: 5px; display: inline-block; vertical-align: text-bottom; }
+        .badge-archetype { font-size: 1.2rem; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 5px; }
+        .badge-archetype-small { font-size: 0.9rem; padding: 1px 4px; border-radius: 3px; margin-left: 5px; vertical-align: middle; }
         
         .arch-shark { background: rgba(255, 7, 58, 0.2); color: var(--neon-red); border: 1px solid var(--neon-red); }
         .arch-turtle { background: rgba(57, 255, 20, 0.2); color: var(--neon-green); border: 1px solid var(--neon-green); }
         .arch-gambler { background: rgba(188, 19, 254, 0.2); color: var(--neon-purple); border: 1px solid var(--neon-purple); }
         .arch-atm { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid #cbd5e1; }
 
-        /* MODAL */
+        /* MODAL & OTHERS */
         .modal-content { background: #1e293b; color: white; border: 1px solid #334155; }
         .volatility-meter {
-            height: 20px; width: 100%; border: 1px solid #fff; border-radius: 10px; position: relative; margin-top: 10px;
+            height: 15px; width: 100%; border: 1px solid #fff; border-radius: 8px; position: relative; margin-top: 8px;
             background: linear-gradient(90deg, #3b82f6 0%, #3b82f6 40%, #e2e8f0 50%, #ff073a 60%, #ff073a 100%);
         }
-        .meter-cursor { width: 4px; height: 26px; background: #fff; position: absolute; top: -3px; box-shadow: 0 0 5px #fff; transition: left 0.5s; }
+        .meter-cursor { width: 3px; height: 21px; background: #fff; position: absolute; top: -3px; box-shadow: 0 0 4px #fff; transition: left 0.5s; }
 
-        .heatmap-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-top: 10px; }
+        .heatmap-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; margin-top: 10px; }
         .heatmap-cell {
-            aspect-ratio: 1; border-radius: 3px; background: var(--gray-dim); position: relative;
+            aspect-ratio: 1; border-radius: 2px; background: var(--gray-dim); position: relative;
             font-size: 10px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3);
         }
         .heatmap-cell:hover::after {
             content: attr(data-title); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
-            background: #000; padding: 4px; font-size: 12px; white-space: nowrap; z-index: 10; border-radius: 4px; border: 1px solid white;
+            background: #000; padding: 4px; font-size: 11px; white-space: nowrap; z-index: 10; border-radius: 4px; border: 1px solid white;
         }
 
         .form-select { background-color: #334155; border-color: #475569; color: white; }
-        
-        /* Guide Modal Table */
         .guide-table th { color: var(--neon-blue) !important; border-bottom: 1px solid #475569; }
-        .guide-table td { border-bottom: 1px solid #334155; padding: 10px; }
+        .guide-table td { border-bottom: 1px solid #334155; padding: 8px; }
 
         #loading { position: fixed; top:0; left:0; right:0; bottom:0; background: var(--bg-dark); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     </style>
@@ -176,7 +188,7 @@
 <body>
 
     <div id="loading">
-        <h1 class="pixel-font" style="font-size: 3rem; color: var(--neon-green);">LOADING DATA...</h1>
+        <h1 class="pixel-font" style="font-size: 2.5rem; color: var(--neon-green);">LOADING...</h1>
         <div class="spinner-border text-light" role="status"></div>
     </div>
 
@@ -184,114 +196,94 @@
         <div class="ticker" id="liveTicker">Đang kết nối vệ tinh...</div>
     </div>
 
-    <div class="container py-4">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
+    <div class="container py-3">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
             <div class="text-center text-md-start mb-3 mb-md-0">
-                <h1 class="pixel-font display-4 mb-0" style="text-shadow: 3px 3px 0 var(--neon-blue); font-weight: bold;">
+                <h1 class="pixel-font display-4 mb-0" style="text-shadow: 2px 2px 0 var(--neon-blue); font-weight: bold;">
                     <i class="fas fa-bolt text-warning"></i> TÁI TẠO NĂNG LƯỢNG
                 </h1>
-                <p class="text-muted pixel-font fs-4 mb-0">TRUNG TÂM PHÂN PHỐI LẠI THU NHẬP & NHÂN PHẨM</p>
+                <p class="text-muted pixel-font fs-4 mb-0" style="font-size: 1rem;">TRUNG TÂM PHÂN PHỐI LẠI THU NHẬP & NHÂN PHẨM</p>
             </div>
             <div>
                 <button class="btn btn-guide pixel-font rounded-pill" onclick="openGuideModal()">
-                    <i class="fas fa-question-circle"></i> HƯỚNG DẪN
+                    <i class="fas fa-question-circle"></i> GUIDE
                 </button>
                 <button class="btn btn-versus pixel-font rounded-pill" onclick="openVersusModal()">
-                    <i class="fas fa-fist-raised"></i> SO KÈO 1VS1
+                    <i class="fas fa-fist-raised"></i> 1VS1
                 </button>
             </div>
         </div>
 
-        <div class="glass-card p-2 p-md-4 mb-5">
+        <div class="glass-card mb-4">
             <table class="table-custom text-nowrap">
                 <thead>
                     <tr>
-                        <th style="width: 60px;">#</th>
-                        <th class="text-start">Thành viên</th>
-                        <th style="width: 80px;">Trận</th>
-                        <th style="width: 80px;">Win%</th>
-                        <th style="width: 140px;">Phong độ</th>
-                        <th class="text-end" style="width: 100px;">EXP</th>
+                        <th style="width: 50px;" onclick="sortData('rank')" class="col-rank">#</th>
+                        <th class="text-start col-name" onclick="sortData('name')">Thành viên <i class="fas fa-sort sort-icon"></i></th>
+                        <th style="width: 70px;" onclick="sortData('matchCount')" class="col-matches">Trận <i class="fas fa-sort sort-icon"></i></th>
+                        <th style="width: 70px;" onclick="sortData('winRate')" class="col-winrate">Win% <i class="fas fa-sort sort-icon"></i></th>
+                        <th style="width: 120px;" onclick="sortData('form')" class="col-form">Phong độ <i class="fas fa-sort sort-icon"></i></th>
+                        <th class="text-end col-exp" style="width: 90px;" onclick="sortData('totalScore')">EXP <i class="fas fa-sort sort-icon"></i></th>
                     </tr>
                 </thead>
                 <tbody id="leaderboardBody"></tbody>
             </table>
         </div>
 
-        <div class="mt-5 mb-5">
-            <div class="text-center mb-4">
-                <h2 class="pixel-font text-warning display-5" style="text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);">
+        <div class="mt-4 mb-4">
+            <div class="text-center mb-3">
+                <h3 class="pixel-font text-warning">
                     <i class="fas fa-hand-holding-usd"></i> VINH DANH NHÀ TÀI TRỢ
-                </h2>
-                <p class="text-muted pixel-font fs-5">Cảm ơn các "Mạnh Thường Quân" đã nuôi sống server</p>
+                </h3>
             </div>
-            <div class="row g-4 justify-content-center" id="sponsorBoard">
+            <div class="row g-3 justify-content-center" id="sponsorBoard">
                 </div>
         </div>
         
-        <div class="text-center mt-5 mb-3">
-            <small class="text-muted pixel-font">Dữ liệu được lấy trực tiếp từ Google Sheet</small>
+        <div class="text-center mt-4">
+            <small class="text-muted pixel-font" style="font-size: 0.8rem;">Dữ liệu: Google Sheet Realtime</small>
         </div>
     </div>
 
     <div class="modal fade" id="guideModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content glass-card">
-                <div class="modal-header border-bottom border-secondary">
-                    <h2 class="modal-title pixel-font fs-3" style="color: var(--neon-blue) !important;">TỪ ĐIỂN THUẬT NGỮ</h2>
+                <div class="modal-header border-bottom border-secondary py-2">
+                    <h4 class="modal-title pixel-font" style="color: var(--neon-blue) !important;">TỪ ĐIỂN THUẬT NGỮ</h4>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <h4 class="pixel-font text-warning mb-3">1. PHÂN LOẠI NGƯỜI CHƠI</h4>
-                    <table class="table table-dark table-borderless guide-table">
+                    <h5 class="pixel-font text-warning mb-2">1. PHÂN LOẠI</h5>
+                    <table class="table table-dark table-borderless guide-table mb-3">
                         <tbody>
                             <tr>
-                                <td width="150"><span class="badge-archetype arch-shark">🦈 SHARK</span></td>
-                                <td><b>CÁ MẬP:</b> Thắng nhiều + Chơi liều (Biên độ điểm lớn).</td>
+                                <td width="120"><span class="badge-archetype arch-shark">🦈 SHARK</span></td>
+                                <td><b>CÁ MẬP:</b> Thắng nhiều + Chơi liều.</td>
                             </tr>
                             <tr>
                                 <td><span class="badge-archetype arch-turtle">🐢 TURTLE</span></td>
-                                <td><b>RÙA:</b> Thắng/Hòa + Chơi an toàn. Chậm mà chắc.</td>
+                                <td><b>RÙA:</b> Thắng/Hòa + Chơi an toàn.</td>
                             </tr>
                             <tr>
                                 <td><span class="badge-archetype arch-gambler">🎰 GAMBLER</span></td>
-                                <td><b>CON BẠC:</b> Thua nhiều + Chơi liều. Được ăn cả, ngã về không.</td>
+                                <td><b>CON BẠC:</b> Thua nhiều + Chơi liều.</td>
                             </tr>
                             <tr>
                                 <td><span class="badge-archetype arch-atm">💸 ATM</span></td>
-                                <td><b>CÂY ATM:</b> Thua nhiều + Chơi an toàn. Nhà tài trợ chính.</td>
+                                <td><b>CÂY ATM:</b> Thua nhiều + Chơi an toàn.</td>
                             </tr>
                         </tbody>
                     </table>
-
-                    <h4 class="pixel-font text-info mt-4 mb-3">2. CHỈ SỐ RADAR</h4>
-                    <ul class="list-group list-group-flush bg-transparent">
-                        <li class="list-group-item bg-transparent text-white">
-                            <b class="text-success"><i class="fas fa-fist-raised"></i> SÁT THƯƠNG:</b> Tính dựa trên Max Score (Ván thắng to nhất).
-                        </li>
-                        <li class="list-group-item bg-transparent text-white">
-                            <b class="text-success"><i class="fas fa-shield-alt"></i> ĐỘ LÌ:</b> Dựa trên tổng số trận đã chơi.
-                        </li>
-                        <li class="list-group-item bg-transparent text-white">
-                            <b class="text-success"><i class="fas fa-dice"></i> MAY MẮN:</b> Chính là Win Rate (Tỷ lệ thắng).
-                        </li>
-                        <li class="list-group-item bg-transparent text-white">
-                            <b class="text-success"><i class="fas fa-balance-scale"></i> ỔN ĐỊNH:</b> Điểm số ít biến động (Độ lệch chuẩn thấp).
-                        </li>
-                        <li class="list-group-item bg-transparent text-white">
-                            <b class="text-success"><i class="fas fa-chart-line"></i> PHONG ĐỘ:</b> Tỷ lệ thắng trong 5 trận gần nhất.
-                        </li>
-                    </ul>
-
-                    <h4 class="pixel-font text-danger mt-4 mb-3">3. QUAN HỆ XÃ HỘI</h4>
-                    <ul class="list-group list-group-flush bg-transparent">
-                        <li class="list-group-item bg-transparent text-white">
-                            <b class="text-warning">☠️ KHẮC TINH (Nemesis):</b> Người bào tiền của bạn nhiều nhất (Số dư nợ âm lớn nhất).
-                        </li>
-                        <li class="list-group-item bg-transparent text-white">
-                            <b class="text-info">🤝 HỢP CẠ (Synergy):</b> Đồng đội mà khi chơi cùng, tỷ lệ thắng của bạn cao nhất.
-                        </li>
-                    </ul>
+                    <h5 class="pixel-font text-info mb-2">2. CHỈ SỐ RADAR</h5>
+                    <div class="small text-white">
+                        <ul class="list-unstyled">
+                            <li><b class="text-success">SÁT THƯƠNG:</b> Dựa trên Max Score (Ván thắng to nhất).</li>
+                            <li><b class="text-success">ĐỘ LÌ:</b> Tổng số trận đã chơi.</li>
+                            <li><b class="text-success">MAY MẮN:</b> Win Rate (Tỷ lệ thắng).</li>
+                            <li><b class="text-success">ỔN ĐỊNH:</b> Độ lệch điểm số thấp.</li>
+                            <li><b class="text-success">PHONG ĐỘ:</b> Tỷ lệ thắng 5 trận gần nhất.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -300,74 +292,40 @@
     <div class="modal fade" id="playerModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content glass-card">
-                <div class="modal-header border-bottom border-secondary">
-                    <h2 class="modal-title fs-2" id="modalName" style="color: var(--neon-green) !important;">NAME</h2>
+                <div class="modal-header border-bottom border-secondary py-2">
+                    <h2 class="modal-title fs-3" id="modalName" style="color: var(--neon-green) !important;">NAME</h2>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row g-4">
                         <div class="col-lg-5 text-center border-end border-secondary">
-                            <div class="mb-3">
+                            <div class="mb-2">
                                 <div id="modalArchetypeBadge"></div>
-                                <div class="fst-italic text-muted mt-2" id="modalQuote">"Quote"</div>
+                                <div class="fst-italic text-muted mt-1 small" id="modalQuote">"Quote"</div>
                             </div>
-                            
-                            <div style="position: relative; height: 250px; width: 100%;">
+                            <div style="position: relative; height: 200px; width: 100%;">
                                 <canvas id="radarChart"></canvas>
                             </div>
-                            
-                            <div class="mt-4 px-2">
-                                <div class="d-flex justify-content-between pixel-font" style="font-size: 1.1rem;">
-                                    <span class="text-info"><i class="fas fa-shield-alt"></i> AN TOÀN</span>
-                                    <span class="text-danger">KHÔ MÁU <i class="fas fa-skull"></i></span>
+                            <div class="mt-3 px-2">
+                                <div class="d-flex justify-content-between pixel-font small">
+                                    <span class="text-info">AN TOÀN</span>
+                                    <span class="text-danger">KHÔ MÁU</span>
                                 </div>
                                 <div class="volatility-meter">
                                     <div class="meter-cursor" id="meterCursor" style="left: 50%;"></div>
                                 </div>
                             </div>
                         </div>
-
                         <div class="col-lg-7">
-                            <h5 class="pixel-font text-warning border-bottom border-secondary pb-1 mb-3">
-                                <i class="fas fa-users"></i> Quan Hệ Xã Hội
-                            </h5>
-                            
-                            <div class="row g-2 mb-4">
-                                <div class="col-6">
-                                    <div class="p-2 border border-secondary rounded bg-dark h-100">
-                                        <div class="small text-muted">Chủ nợ (Thua nhiều nhất)</div>
-                                        <div class="text-danger fw-bold fs-5" id="modalLedgerLoss">---</div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="p-2 border border-secondary rounded bg-dark h-100">
-                                        <div class="small text-muted">Con mồi (Thắng nhiều nhất)</div>
-                                        <div class="text-success fw-bold fs-5" id="modalLedgerWin">---</div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="p-2 border border-secondary rounded bg-dark h-100">
-                                        <div class="small text-muted">Hợp cạ</div>
-                                        <div class="text-info fw-bold" id="modalSynergy">---</div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="p-2 border border-secondary rounded bg-dark h-100">
-                                        <div class="small text-muted">Khắc tinh</div>
-                                        <div class="text-warning fw-bold" id="modalNemesis">---</div>
-                                    </div>
-                                </div>
+                            <h5 class="pixel-font text-warning border-bottom border-secondary pb-1 mb-2">QUAN HỆ XÃ HỘI</h5>
+                            <div class="row g-2 mb-3">
+                                <div class="col-6"><div class="p-2 border border-secondary rounded bg-dark h-100"><div class="small text-muted">Chủ nợ</div><div class="text-danger fw-bold" id="modalLedgerLoss">---</div></div></div>
+                                <div class="col-6"><div class="p-2 border border-secondary rounded bg-dark h-100"><div class="small text-muted">Con mồi</div><div class="text-success fw-bold" id="modalLedgerWin">---</div></div></div>
+                                <div class="col-6"><div class="p-2 border border-secondary rounded bg-dark h-100"><div class="small text-muted">Hợp cạ</div><div class="text-info fw-bold" id="modalSynergy">---</div></div></div>
+                                <div class="col-6"><div class="p-2 border border-secondary rounded bg-dark h-100"><div class="small text-muted">Khắc tinh</div><div class="text-warning fw-bold" id="modalNemesis">---</div></div></div>
                             </div>
-
-                            <h5 class="pixel-font text-info border-bottom border-secondary pb-1 mb-2">
-                                <i class="fas fa-calendar-alt"></i> Lịch Sử (60 Ngày Gần Nhất)
-                            </h5>
+                            <h5 class="pixel-font text-info border-bottom border-secondary pb-1 mb-2">LỊCH SỬ (60 NGÀY)</h5>
                             <div id="modalHeatmap" class="heatmap-grid"></div>
-                            <div class="d-flex justify-content-between mt-1 small text-muted">
-                                <span><span style="color:var(--neon-red)">■</span> Thua</span>
-                                <span><span style="color:var(--gray-dim)">■</span> Nghỉ</span>
-                                <span><span style="color:var(--neon-green)">■</span> Thắng</span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -378,33 +336,23 @@
     <div class="modal fade" id="versusModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content glass-card" style="border: 1px solid var(--neon-purple);">
-                <div class="modal-header border-bottom border-secondary">
-                    <h3 class="modal-title text-center w-100 pixel-font" style="color: var(--neon-purple) !important;">ĐẤU TRƯỜNG 1VS1</h3>
+                <div class="modal-header border-bottom border-secondary py-2">
+                    <h4 class="modal-title text-center w-100 pixel-font" style="color: var(--neon-purple) !important;">ĐẤU TRƯỜNG 1VS1</h4>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body text-center">
-                    <div class="row align-items-center mb-4">
-                        <div class="col-5">
-                            <select id="versusP1" class="form-select pixel-font fs-5 text-center"></select>
-                        </div>
-                        <div class="col-2">
-                            <h1 class="pixel-font text-muted">VS</h1>
-                        </div>
-                        <div class="col-5">
-                            <select id="versusP2" class="form-select pixel-font fs-5 text-center"></select>
-                        </div>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-5"><select id="versusP1" class="form-select pixel-font text-center"></select></div>
+                        <div class="col-2"><h3 class="pixel-font text-muted">VS</h3></div>
+                        <div class="col-5"><select id="versusP2" class="form-select pixel-font text-center"></select></div>
                     </div>
-                    <button class="btn btn-versus w-100 pixel-font mb-4" onclick="calculateVersus()">PHÂN TÍCH</button>
-                    
+                    <button class="btn btn-versus w-100 pixel-font mb-3" onclick="calculateVersus()">PHÂN TÍCH</button>
                     <div id="versusResult" class="d-none">
-                        <div class="display-1 pixel-font mb-2">
-                            <span id="scoreP1" class="text-info">0</span> : <span id="scoreP2" class="text-danger">0</span>
-                        </div>
-                        <p class="text-muted mb-4">Tỷ số đối đầu</p>
-                        
-                        <div class="p-3 border rounded bg-dark">
-                            <h4 class="pixel-font text-warning mb-2">SỐ DƯ NỢ</h4>
-                            <div id="versusMoney" class="fs-2 fw-bold">0</div>
+                        <div class="display-3 pixel-font mb-1"><span id="scoreP1" class="text-info">0</span> : <span id="scoreP2" class="text-danger">0</span></div>
+                        <p class="text-muted small mb-3">Tỷ số đối đầu</p>
+                        <div class="p-2 border rounded bg-dark">
+                            <h5 class="pixel-font text-warning mb-1">SỐ DƯ NỢ</h5>
+                            <div id="versusMoney" class="fs-3 fw-bold">0</div>
                             <div id="versusMoneyDesc" class="small text-muted">---</div>
                         </div>
                     </div>
@@ -425,6 +373,7 @@
         let globalAvgStdDev = 0;
         let radarChartInstance = null;
         let latestDateInSheet = new Date(2000, 0, 1);
+        let currentSort = { key: 'totalScore', dir: 'desc' }; // Default Sort
 
         document.addEventListener("DOMContentLoaded", () => {
             fetchData();
@@ -443,16 +392,12 @@
             });
         }
 
-        // --- UPDATED DATE PARSER (M/D/YYYY FIX) ---
         function parseDate(dateStr) {
             if(!dateStr) return null;
             const dateOnly = dateStr.split(' ')[0]; 
             const parts = dateOnly.split('/');
             if(parts.length < 3) return null;
-            const month = parseInt(parts[0]);
-            const day = parseInt(parts[1]);
-            const year = parseInt(parts[2]);
-            return new Date(year, month-1, day);
+            return new Date(parseInt(parts[2]), parseInt(parts[0])-1, parseInt(parts[1]));
         }
 
         function getDateKey(dateObj) {
@@ -477,8 +422,7 @@
                     if (!players[name]) {
                         players[name] = {
                             name: name, totalScore: 0, matchCount: 0, wins: 0, losses: 0,
-                            scores: [], dates: {}, matches: [],
-                            ledger: {}, teammates: {}
+                            scores: [], dates: {}, matches: [], ledger: {}, teammates: {}
                         };
                     }
                     if (!matches[matchId]) matches[matchId] = { id: matchId, players: [], scores: {} };
@@ -496,19 +440,15 @@
                     matches[matchId].scores[name] = score;
                 }
             });
-
             calcAdvancedStats();
         }
 
         function calcAdvancedStats() {
             const allStdDevs = [];
-
-            // Ledger & Synergy
             Object.values(matches).forEach(m => {
                 const winners = m.players.filter(p => m.scores[p] > 0);
                 const losers = m.players.filter(p => m.scores[p] < 0);
                 const totalWin = winners.reduce((sum, p) => sum + m.scores[p], 0);
-                
                 if (totalWin > 0) {
                     winners.forEach(w => {
                         const share = m.scores[w] / totalWin;
@@ -519,7 +459,6 @@
                         });
                     });
                 }
-                
                 m.players.forEach(p1 => {
                     m.players.forEach(p2 => {
                         if (p1 !== p2) {
@@ -531,21 +470,20 @@
                 });
             });
 
-            // Stats
             Object.values(players).forEach(p => {
                 const mean = p.scores.reduce((a,b)=>a+b,0)/p.scores.length;
                 const variance = p.scores.reduce((a,b)=>a+Math.pow(b-mean,2),0)/p.scores.length;
                 p.stdDev = Math.sqrt(variance);
                 allStdDevs.push(p.stdDev);
                 p.winRate = (p.wins / p.matchCount) * 100;
+                // Calc form score (last 5) for sorting
+                p.form = (p.scores.slice(-5).filter(s=>s>0).length / 5) * 100;
             });
             globalAvgStdDev = allStdDevs.reduce((a,b)=>a+b,0) / allStdDevs.length;
 
-            // Archetypes
             Object.values(players).forEach(p => {
                 const isRisky = p.stdDev > globalAvgStdDev;
                 const isWinner = p.winRate >= 45;
-
                 if (isWinner && isRisky) { p.archetype = "SHARK"; p.quote = "Kẻ săn mồi vùng nước sâu"; }
                 else if (isWinner && !isRisky) { p.archetype = "TURTLE"; p.quote = "Chậm mà chắc"; }
                 else if (!isWinner && isRisky) { p.archetype = "GAMBLER"; p.quote = "Được ăn cả ngã về không"; }
@@ -582,40 +520,31 @@
             const bot = arr.reduce((a,b)=>a.totalScore<b.totalScore?a:b);
             
             let maxLossName = "", maxLossScore = 0;
-            arr.forEach(p => {
-                const minS = Math.min(...p.scores);
-                if(minS < maxLossScore) { maxLossScore = minS; maxLossName = p.name; }
-            });
-
+            arr.forEach(p => { const minS = Math.min(...p.scores); if(minS < maxLossScore) { maxLossScore = minS; maxLossName = p.name; } });
             let oneHitName = "", oneHitScore = 0;
-            arr.forEach(p => {
-                const maxS = Math.max(...p.scores);
-                if(maxS > oneHitScore) { oneHitScore = maxS; oneHitName = p.name; }
-            });
+            arr.forEach(p => { const maxS = Math.max(...p.scores); if(maxS > oneHitScore) { oneHitScore = maxS; oneHitName = p.name; } });
 
             const msgs = [
-                `👑 TOP 1 SERVER: ${top.name} (${top.totalScore})`,
+                `👑 TOP 1: ${top.name} (${top.totalScore})`,
                 `💀 ĐÁY XÃ HỘI: ${bot.name} (${bot.totalScore})`,
                 `🔥 ONE-HIT: ${oneHitName} (+${oneHitScore})`,
-                `🩸 VÁN THUA ĐẬM NHẤT: ${maxLossName} (${maxLossScore})`,
-                `📅 CẬP NHẬT ĐẾN NGÀY: ${getDateKey(latestDateInSheet)}`
+                `🩸 THUA ĐẬM NHẤT: ${maxLossName} (${maxLossScore})`,
+                `📅 UPDATE: ${getDateKey(latestDateInSheet)}`
             ];
             document.getElementById('liveTicker').innerText = msgs.join("  +++  ");
         }
 
         function getArchetypeIcon(type) {
-            if(type=="SHARK") return '<span class="badge-archetype-small arch-shark" title="Cá Mập">🦈</span>';
-            if(type=="TURTLE") return '<span class="badge-archetype-small arch-turtle" title="Rùa">🐢</span>';
-            if(type=="GAMBLER") return '<span class="badge-archetype-small arch-gambler" title="Con Bạc">🎰</span>';
-            return '<span class="badge-archetype-small arch-atm" title="ATM">💸</span>';
+            if(type=="SHARK") return '<span class="badge-archetype-small arch-shark">🦈</span>';
+            if(type=="TURTLE") return '<span class="badge-archetype-small arch-turtle">🐢</span>';
+            if(type=="GAMBLER") return '<span class="badge-archetype-small arch-gambler">🎰</span>';
+            return '<span class="badge-archetype-small arch-atm">💸</span>';
         }
 
         function renderSponsors() {
             const container = document.getElementById('sponsorBoard');
             container.innerHTML = '';
-            
             const sortedBottom = Object.values(players).sort((a,b) => a.totalScore - b.totalScore).slice(0, 3);
-            
             sortedBottom.forEach((p, index) => {
                 let rankTitle = "", borderClass = "", icon = "", color = "";
                 if(index === 0) { rankTitle="NHÀ TÀI TRỢ KIM CƯƠNG"; borderClass="sponsor-diamond"; icon="💎"; color="text-info"; }
@@ -626,29 +555,55 @@
                 col.className = 'col-md-4 col-12';
                 col.innerHTML = `
                     <div class="sponsor-card ${borderClass}" onclick="openPlayerModal('${p.name}')" style="cursor: pointer;">
-                        <div class="pixel-font fs-3 ${color} mb-3" style="text-shadow: 0 0 10px currentColor;">${icon} <br> ${rankTitle}</div>
-                        <h2 class="fw-bold mb-1">${p.name}</h2>
-                        <div class="pixel-font display-4 ${color}">${p.totalScore}</div>
-                        <small class="text-muted">Tổng điểm tài trợ</small>
+                        <div class="pixel-font fs-4 ${color} mb-2" style="text-shadow: 0 0 5px currentColor;">${icon} ${rankTitle}</div>
+                        <h3 class="fw-bold mb-0">${p.name}</h3>
+                        <div class="pixel-font display-6 ${color}">${p.totalScore}</div>
                     </div>
                 `;
                 container.appendChild(col);
             });
         }
 
+        // --- SORTING LOGIC ---
+        function sortData(key) {
+            if (currentSort.key === key) {
+                currentSort.dir = currentSort.dir === 'desc' ? 'asc' : 'desc';
+            } else {
+                currentSort.key = key;
+                currentSort.dir = 'desc'; // Default high to low
+            }
+            renderLeaderboard();
+        }
+
         function renderLeaderboard() {
             const tbody = document.getElementById('leaderboardBody');
             tbody.innerHTML = '';
             
-            const sorted = Object.values(players).sort((a,b) => b.totalScore - a.totalScore);
-            const count = sorted.length;
+            const sorted = Object.values(players).sort((a, b) => {
+                let valA = a[currentSort.key];
+                let valB = b[currentSort.key];
+                if (typeof valA === 'string') valA = valA.toLowerCase();
+                if (typeof valB === 'string') valB = valB.toLowerCase();
+                
+                if (valA < valB) return currentSort.dir === 'asc' ? -1 : 1;
+                if (valA > valB) return currentSort.dir === 'asc' ? 1 : -1;
+                return 0;
+            });
 
+            // Re-calculate visual rank based on Score (Visual Rank) or just Index?
+            // Usually sort changes the visual order, so Rank should probably stick to Score Rank or Index.
+            // Let's use Index as "Row Number" but highlight God/Feeder based on Score Rank.
+            const scoreSorted = Object.values(players).sort((a,b) => b.totalScore - a.totalScore);
+            
             sorted.forEach((p, index) => {
-                const rank = index + 1;
+                // Determine Real Rank for Styling
+                const realRank = scoreSorted.findIndex(x => x.name === p.name) + 1;
+                const count = scoreSorted.length;
+
                 let rowClass = "";
-                let rankDisplay = `#${rank}`;
-                if (index < 3) { rowClass = "row-god"; if(rank==1) rankDisplay="👑"; if(rank==2) rankDisplay="🥈"; if(rank==3) rankDisplay="🥉"; }
-                else if (index >= count - 3) { rowClass = "row-feeder"; rankDisplay="💀"; }
+                let rankDisplay = `#${realRank}`;
+                if (realRank <= 3) { rowClass = "row-god"; if(realRank==1) rankDisplay="👑"; if(realRank==2) rankDisplay="🥈"; if(realRank==3) rankDisplay="🥉"; }
+                else if (realRank >= count - 2) { rowClass = "row-feeder"; rankDisplay="💀"; }
 
                 const last5 = p.scores.slice(-5);
                 const maxVal = Math.max(...last5.map(Math.abs), 1);
@@ -665,19 +620,24 @@
                 tr.onclick = () => openPlayerModal(p.name);
 
                 tr.innerHTML = `
-                    <td class="text-center" data-label="Rank"><span class="rank-number">${rankDisplay}</span></td>
-                    <td data-label="Thành viên">
-                        <div class="fw-bold fs-5">${p.name} ${getArchetypeIcon(p.archetype)}</div>
+                    <td class="text-center col-rank" data-label="Rank"><span class="rank-number">${rankDisplay}</span></td>
+                    <td class="col-name" data-label="Thành viên">
+                        <div class="fw-bold">${p.name} ${getArchetypeIcon(p.archetype)}</div>
                     </td>
-                    <td class="text-center pixel-font fs-5" data-label="Trận">${p.matchCount}</td>
-                    <td class="text-center pixel-font fs-5 ${p.winRate>=50?'text-success':'text-danger'}" data-label="Win%">${p.winRate.toFixed(0)}%</td>
-                    <td class="text-center" data-label="Phong độ">${barHtml}</td>
-                    <td class="text-end fw-bold fs-4 pixel-font ${p.totalScore>0?'text-success':'text-danger'}" data-label="EXP">
+                    <td class="text-center pixel-font fs-5 col-matches" data-label="Trận">${p.matchCount}</td>
+                    <td class="text-center pixel-font fs-5 ${p.winRate>=50?'text-success':'text-danger'} col-winrate" data-label="Win%">${p.winRate.toFixed(0)}%</td>
+                    <td class="text-center col-form" data-label="Phong độ">${barHtml}</td>
+                    <td class="text-end fw-bold fs-4 pixel-font ${p.totalScore>0?'text-success':'text-danger'} col-exp" data-label="EXP">
                         ${p.totalScore>0?'+':''}${p.totalScore}
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
+            
+            // Highlight sorted column header
+            document.querySelectorAll('.table-custom th').forEach(th => th.classList.remove('th-active'));
+            // This is simple logic, strictly works if onclick matches class mapping. 
+            // For now, visual arrows update is implicit in re-render or could be added dynamically.
         }
 
         function openPlayerModal(name) {
@@ -702,13 +662,11 @@
             const hm = document.getElementById('modalHeatmap');
             hm.innerHTML = '';
             const anchorDate = new Date(latestDateInSheet);
-            
             for (let i = 59; i >= 0; i--) {
                 const d = new Date(anchorDate);
                 d.setDate(anchorDate.getDate() - i);
                 const dateKey = getDateKey(d);
                 const score = p.dates[dateKey];
-                
                 const cell = document.createElement('div');
                 cell.className = 'heatmap-cell';
                 if (score !== undefined) {
@@ -724,7 +682,6 @@
                 }
                 hm.appendChild(cell);
             }
-
             renderRadar(p);
             new bootstrap.Modal(document.getElementById('playerModal')).show();
         }
@@ -743,7 +700,7 @@
                             Math.min(100, (p.matchCount/20)*100),
                             p.winRate,
                             Math.max(0, 100 - (p.stdDev*2)),
-                            (p.scores.slice(-5).filter(s=>s>0).length/5)*100
+                            p.form
                         ],
                         backgroundColor: 'rgba(57, 255, 20, 0.2)',
                         borderColor: '#39ff14',
@@ -752,7 +709,7 @@
                     }]
                 },
                 options: {
-                    scales: { r: { angleLines: {color: '#334155'}, grid: {color: '#334155'}, pointLabels: {color: '#fff', font:{family:'VT323', size:16}}, ticks: {display: false, max:100, min:0} } },
+                    scales: { r: { angleLines: {color: '#334155'}, grid: {color: '#334155'}, pointLabels: {color: '#fff', font:{family:'VT323', size:14}}, ticks: {display: false, max:100, min:0} } },
                     plugins: { legend: {display: false} }, maintainAspectRatio: false
                 }
             });
@@ -762,10 +719,7 @@
             const s1 = document.getElementById('versusP1');
             const s2 = document.getElementById('versusP2');
             const names = Object.keys(players).sort();
-            names.forEach(n => {
-                s1.add(new Option(n, n));
-                s2.add(new Option(n, n));
-            });
+            names.forEach(n => { s1.add(new Option(n, n)); s2.add(new Option(n, n)); });
             if(names.length>1) s2.selectedIndex = 1;
         }
 
@@ -793,9 +747,9 @@
             const mEl = document.getElementById('versusMoney');
             const dEl = document.getElementById('versusMoneyDesc');
             
-            if(ledger>0) { mEl.innerText=`+${Math.round(ledger)}`; mEl.className="fs-2 fw-bold text-success"; dEl.innerText=`${p1} đang lời từ ${p2}`; }
-            else if(ledger<0) { mEl.innerText=`${Math.round(ledger)}`; mEl.className="fs-2 fw-bold text-danger"; dEl.innerText=`${p2} đang lời từ ${p1}`; }
-            else { mEl.innerText="0"; mEl.className="fs-2 fw-bold text-white"; dEl.innerText="Hòa vốn"; }
+            if(ledger>0) { mEl.innerText=`+${Math.round(ledger)}`; mEl.className="fs-3 fw-bold text-success"; dEl.innerText=`${p1} đang lời từ ${p2}`; }
+            else if(ledger<0) { mEl.innerText=`${Math.round(ledger)}`; mEl.className="fs-3 fw-bold text-danger"; dEl.innerText=`${p2} đang lời từ ${p1}`; }
+            else { mEl.innerText="0"; mEl.className="fs-3 fw-bold text-white"; dEl.innerText="Hòa vốn"; }
         }
     </script>
 </body>
