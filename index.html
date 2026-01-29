@@ -24,6 +24,7 @@
             background-color: var(--bg-dark);
             color: var(--text-main);
             font-family: 'Roboto', sans-serif;
+            padding-bottom: 50px;
         }
 
         /* --- TEXT VISIBILITY FIX --- */
@@ -35,6 +36,7 @@
         .text-danger { color: var(--neon-red) !important; }
         .text-info { color: var(--neon-blue) !important; }
         .text-warning { color: var(--neon-gold) !important; }
+        .text-secondary { color: #cbd5e1 !important; }
 
         /* FONT PIXEL */
         .pixel-font, .rank-number, .modal-title, .btn-versus, table th, .badge-archetype {
@@ -107,6 +109,34 @@
         .row-feeder td { background: rgba(255, 7, 58, 0.05) !important; border-color: var(--neon-red) !important; }
         .row-feeder .rank-number { font-size: 1.8rem; color: var(--neon-red); }
 
+        /* SPONSOR CARDS (NEW) */
+        .sponsor-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid #334155;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+        .sponsor-card:hover { transform: translateY(-5px); }
+        
+        .sponsor-diamond { 
+            border-color: var(--neon-blue); 
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.15); 
+            background: linear-gradient(180deg, rgba(0,243,255,0.05) 0%, rgba(15,23,42,0.9) 100%);
+        }
+        .sponsor-gold { 
+            border-color: var(--neon-gold); 
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+            background: linear-gradient(180deg, rgba(255,215,0,0.05) 0%, rgba(15,23,42,0.9) 100%);
+        }
+        .sponsor-silver { 
+            border-color: #cbd5e1; 
+            box-shadow: 0 0 20px rgba(203, 213, 225, 0.15);
+            background: linear-gradient(180deg, rgba(203,213,225,0.05) 0%, rgba(15,23,42,0.9) 100%);
+        }
+
         /* BADGES */
         .badge-archetype { font-size: 1.2rem; padding: 4px 8px; border-radius: 4px; display: inline-block; margin-top: 5px; }
         .badge-archetype-small { font-size: 1rem; padding: 2px 6px; border-radius: 4px; margin-left: 5px; display: inline-block; vertical-align: text-bottom; }
@@ -172,7 +202,7 @@
             </div>
         </div>
 
-        <div class="glass-card p-2 p-md-4">
+        <div class="glass-card p-2 p-md-4 mb-5">
             <table class="table-custom text-nowrap">
                 <thead>
                     <tr>
@@ -187,8 +217,19 @@
                 <tbody id="leaderboardBody"></tbody>
             </table>
         </div>
+
+        <div class="mt-5 mb-5">
+            <div class="text-center mb-4">
+                <h2 class="pixel-font text-warning display-5" style="text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);">
+                    <i class="fas fa-hand-holding-usd"></i> VINH DANH NHÀ TÀI TRỢ
+                </h2>
+                <p class="text-muted pixel-font fs-5">Cảm ơn các "Mạnh Thường Quân" đã nuôi sống server</p>
+            </div>
+            <div class="row g-4 justify-content-center" id="sponsorBoard">
+                </div>
+        </div>
         
-        <div class="text-center mt-4">
+        <div class="text-center mt-5 mb-3">
             <small class="text-muted pixel-font">Dữ liệu được lấy trực tiếp từ Google Sheet</small>
         </div>
     </div>
@@ -405,25 +446,20 @@
         // --- UPDATED DATE PARSER (M/D/YYYY FIX) ---
         function parseDate(dateStr) {
             if(!dateStr) return null;
-            // Expected format: "1/28/2026 15:20" (M/D/YYYY HH:MM)
-            const dateOnly = dateStr.split(' ')[0]; // "1/28/2026"
+            const dateOnly = dateStr.split(' ')[0]; 
             const parts = dateOnly.split('/');
             
-            // Handle specific case: m/d/yyyy
-            // parts[0]=month, parts[1]=day, parts[2]=year
+            // Expected M/D/YYYY from Sheet
             if(parts.length < 3) return null;
             
             const month = parseInt(parts[0]);
             const day = parseInt(parts[1]);
             const year = parseInt(parts[2]);
 
-            // Basic validation to prevent year 2028 issues
-            // If month > 12, user might have used D/M/YYYY accidentally, but prompt says data is M/D/YYYY
-            // We trust the structure: M/D/YYYY
             return new Date(year, month-1, day);
         }
 
-        // Helper: "1/5/2026" -> "1/5/2026" (Normalized key)
+        // Helper: Normalized key
         function getDateKey(dateObj) {
             return `${dateObj.getDate()}/${dateObj.getMonth()+1}/${dateObj.getFullYear()}`;
         }
@@ -439,7 +475,6 @@
                 const dObj = parseDate(row.Date);
                 
                 if(dObj) {
-                    // Update latest date for Heatmap anchor
                     if(dObj > latestDateInSheet) latestDateInSheet = dObj;
                     const dateKey = getDateKey(dObj);
                     const matchId = `${row.Date}_${row.Sheet}`;
@@ -542,6 +577,7 @@
         function renderUI() {
             renderTicker();
             renderLeaderboard();
+            renderSponsors();
         }
 
         function renderTicker() {
@@ -550,14 +586,12 @@
             const top = arr.reduce((a,b)=>a.totalScore>b.totalScore?a:b);
             const bot = arr.reduce((a,b)=>a.totalScore<b.totalScore?a:b);
             
-            // Tìm Max Loss (Ván thua đậm nhất)
             let maxLossName = "", maxLossScore = 0;
             arr.forEach(p => {
                 const minS = Math.min(...p.scores);
                 if(minS < maxLossScore) { maxLossScore = minS; maxLossName = p.name; }
             });
 
-            // Tìm One Hit
             let oneHitName = "", oneHitScore = 0;
             arr.forEach(p => {
                 const maxS = Math.max(...p.scores);
@@ -579,6 +613,37 @@
             if(type=="TURTLE") return '<span class="badge-archetype-small arch-turtle" title="Rùa">🐢</span>';
             if(type=="GAMBLER") return '<span class="badge-archetype-small arch-gambler" title="Con Bạc">🎰</span>';
             return '<span class="badge-archetype-small arch-atm" title="ATM">💸</span>';
+        }
+
+        // --- NEW: RENDER SPONSOR BOARD ---
+        function renderSponsors() {
+            const container = document.getElementById('sponsorBoard');
+            container.innerHTML = '';
+            
+            // Sort lowest score first
+            const sortedBottom = Object.values(players).sort((a,b) => a.totalScore - b.totalScore).slice(0, 3);
+            
+            sortedBottom.forEach((p, index) => {
+                let rankTitle = "", borderClass = "", icon = "", color = "";
+                // Top 1 âm -> Kim Cương
+                if(index === 0) { rankTitle="NHÀ TÀI TRỢ KIM CƯƠNG"; borderClass="sponsor-diamond"; icon="💎"; color="text-info"; }
+                // Top 2 âm -> Vàng
+                if(index === 1) { rankTitle="NHÀ TÀI TRỢ VÀNG"; borderClass="sponsor-gold"; icon="🥇"; color="text-warning"; }
+                // Top 3 âm -> Bạc
+                if(index === 2) { rankTitle="NHÀ TÀI TRỢ BẠC"; borderClass="sponsor-silver"; icon="🥈"; color="text-secondary"; }
+
+                const col = document.createElement('div');
+                col.className = 'col-md-4 col-12';
+                col.innerHTML = `
+                    <div class="sponsor-card ${borderClass}" onclick="openPlayerModal('${p.name}')" style="cursor: pointer;">
+                        <div class="pixel-font fs-3 ${color} mb-3" style="text-shadow: 0 0 10px currentColor;">${icon} <br> ${rankTitle}</div>
+                        <h2 class="fw-bold mb-1">${p.name}</h2>
+                        <div class="pixel-font display-4 ${color}">${p.totalScore}</div>
+                        <small class="text-muted">Tổng điểm tài trợ</small>
+                    </div>
+                `;
+                container.appendChild(col);
+            });
         }
 
         function renderLeaderboard() {
@@ -644,7 +709,6 @@
             const volPct = Math.min(100, (p.stdDev / (globalAvgStdDev * 2)) * 100);
             document.getElementById('meterCursor').style.left = `${volPct}%`;
 
-            // --- HEATMAP FIX ---
             const hm = document.getElementById('modalHeatmap');
             hm.innerHTML = '';
             const anchorDate = new Date(latestDateInSheet);
